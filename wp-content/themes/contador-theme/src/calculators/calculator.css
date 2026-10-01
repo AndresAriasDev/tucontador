@@ -2,9 +2,8 @@
   display: grid;
   min-height: clamp(8.75rem, 15vw, 12rem);
   place-items: center;
-  padding-block: clamp(1.75rem, 4vw, 3rem);
-  background: var(--color-secondary, #02175d);
-  color: var(--color-text-light, #fff);
+  padding: 8rem 0 3rem 0;
+  background: #ebebfc;
   text-align: center;
 }
 
@@ -18,7 +17,7 @@
 
 .contador-calculator-page__hero h1 {
   margin: 0;
-  color: inherit;
+  color: --var(--color-secondary);
   font-size: clamp(2rem, 3.4vw, 2.75rem);
   font-weight: 700;
   line-height: 1.1;
@@ -498,7 +497,9 @@
 }
 
 @media (max-width: 760px) {
-  .contador-calculator-page__hero { min-height: 7.75rem; }
+  .contador-calculator-page__hero { min-height: 7.75rem; 
+      padding: 8rem 0 2rem;
+  }
   .contador-calculator-page__hero h1 { font-size: clamp(1.85rem, 7vw, 2.25rem); }
   #tucontador-calculator .ir-calculator { grid-template-columns: minmax(0, 1fr); }
   #tucontador-calculator .ir-calculator__empty { min-height: 0; }
