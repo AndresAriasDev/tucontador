@@ -114,3 +114,7 @@ function contador_theme_header_cta_attributes( $atts, $item, $args, $depth ) {
 	return $atts;
 }
 add_filter( 'nav_menu_link_attributes', 'contador_theme_header_cta_attributes', 10, 4 );
+
+
+
+require_once get_template_directory() . '/inc/calculators.php';
