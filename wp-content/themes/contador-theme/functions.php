@@ -1,0 +1,116 @@
+<?php
+/**
+ * Funciones del tema.
+ *
+ * @package Contador_Theme
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Registra los soportes y las ubicaciones de menú del tema.
+ */
+function contador_theme_setup() {
+	add_theme_support( 'title-tag' );
+	add_theme_support( 'post-thumbnails' );
+	add_theme_support(
+		'custom-logo',
+		array(
+			'flex-width'  => true,
+			'flex-height' => true,
+		)
+	);
+
+	register_nav_menus(
+		array(
+			'primary-menu' => __( 'Menú principal', 'contador-theme' ),
+		)
+	);
+}
+add_action( 'after_setup_theme', 'contador_theme_setup' );
+
+/**
+ * Carga los estilos globales y renueva su versión cuando cambia el archivo.
+ */
+function contador_theme_enqueue_styles() {
+	$css_file = 'assets/css/global.css';
+
+	wp_enqueue_style(
+		'contador-theme-global',
+		get_theme_file_uri( $css_file ),
+		array(),
+		(string) filemtime( get_theme_file_path( $css_file ) )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_styles' );
+
+/**
+ * Estilos del footer compartido por todas las páginas.
+ */
+function contador_theme_enqueue_footer_styles() {
+	wp_enqueue_style(
+		'contador-theme-footer',
+		get_theme_file_uri( 'assets/css/components/footer.css' ),
+		array( 'contador-theme-global' ),
+		(string) filemtime( get_theme_file_path( 'assets/css/components/footer.css' ) )
+	);
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_footer_styles' );
+
+/**
+ * Carga los estilos de la Home únicamente en la portada.
+ */
+function contador_theme_enqueue_home_styles() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'contador-theme-home',
+		get_theme_file_uri( 'assets/css/pages/home.css' ),
+		array( 'contador-theme-global' ),
+		(string) filemtime( get_theme_file_path( 'assets/css/pages/home.css' ) )
+	);
+
+	wp_enqueue_script(
+		'contador-theme-home',
+		get_theme_file_uri( 'assets/js/pages/home.js' ),
+		array(),
+		(string) filemtime( get_theme_file_path( 'assets/js/pages/home.js' ) ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_home_styles' );
+
+/**
+ * Carga los recursos del header después de los estilos globales.
+ */
+function contador_theme_enqueue_header_assets() {
+	wp_enqueue_style(
+		'contador-theme-header',
+		get_theme_file_uri( 'assets/css/header.css' ),
+		array( 'contador-theme-global' ),
+		(string) filemtime( get_theme_file_path( 'assets/css/header.css' ) )
+	);
+
+	wp_enqueue_script(
+		'contador-theme-header',
+		get_theme_file_uri( 'assets/js/header.js' ),
+		array(),
+		(string) filemtime( get_theme_file_path( 'assets/js/header.js' ) ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_header_assets' );
+
+/**
+ * Aplica las clases globales de botón al CTA identificado desde WordPress.
+ */
+function contador_theme_header_cta_attributes( $atts, $item, $args, $depth ) {
+	if ( 'primary-menu' === $args->theme_location && 0 === $depth && in_array( 'menu-item-cta', (array) $item->classes, true ) ) {
+		$atts['class'] = trim( ( $atts['class'] ?? '' ) . ' btn btn-primary' );
+	}
+
+	return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'contador_theme_header_cta_attributes', 10, 4 );

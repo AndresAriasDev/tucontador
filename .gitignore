@@ -39,14 +39,12 @@ Thumbs.db
 # Ignore third-party themes by default
 /wp-content/themes/*
 
+# Allow our custom theme
+!/wp-content/themes/contador-theme/
+!/wp-content/themes/contador-theme/**
+
 # Ignore third-party plugins by default
 /wp-content/plugins/*
-
-# Allow our custom theme
-!/wp-content/themes/tucontador/
-
-# Allow our custom plugin
-!/wp-content/plugins/tucontador-core/
 
 # WordPress wp-content default file
 /wp-content/index.php

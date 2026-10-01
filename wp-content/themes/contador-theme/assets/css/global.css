@@ -1,0 +1,221 @@
+/* Fuentes locales: únicamente los pesos utilizados por el tema. */
+@font-face {
+	font-family: 'Manrope';
+	src: url('../fonts/manrope/Manrope-Regular.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Manrope';
+	src: url('../fonts/manrope/Manrope-Medium.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Manrope';
+	src: url('../fonts/manrope/Manrope-SemiBold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Manrope';
+	src: url('../fonts/manrope/Manrope-Bold.ttf') format('truetype');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+/* Variables globales. */
+:root {
+	--color-primary: #0705d6;
+	--color-secondary: #02175d;
+	--color-accent: #ffb954;
+	--color-danger: #c14344;
+	--color-text: #172033;
+	--color-text-muted: #667085;
+	--color-text-light: #ffffff;
+	--color-background: #ffffff;
+	--color-background-soft: #f6f7fb;
+	--color-background-dark: #02175d;
+	--color-border: #e4e7ec;
+
+	--font-family-base: 'Manrope', sans-serif;
+	--font-size-h1: clamp(2.5rem, 5vw, 4.5rem);
+	--font-size-h2: clamp(2rem, 4vw, 3.25rem);
+	--font-size-h3: clamp(1.5rem, 3vw, 2rem);
+	--font-size-h4: 1.25rem;
+	--font-size-body-large: 1.125rem;
+	--font-size-body: 1rem;
+	--font-size-small: 0.875rem;
+	--font-weight-regular: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+	--line-height-heading: 1.2;
+	--line-height-body: 1.65;
+
+	--container-max: 1200px;
+	--container-padding: 24px;
+	--radius: 0.5rem;
+	--shadow-soft: 0 4px 16px rgb(23 32 51 / 10%);
+	--transition-fast: 160ms ease;
+	--section-spacing: clamp(3rem, 6vw, 6rem);
+}
+
+/* Base ligera. */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	background-color: var(--color-background);
+	color: var(--color-text);
+	font-family: var(--font-family-base);
+	font-size: var(--font-size-body);
+	font-weight: var(--font-weight-regular);
+	line-height: var(--line-height-body);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.5em;
+	font-weight: var(--font-weight-bold);
+	line-height: var(--line-height-heading);
+}
+
+h1 { font-size: var(--font-size-h1); }
+h2 { font-size: var(--font-size-h2); }
+h3 { font-size: var(--font-size-h3); }
+h4 { font-size: var(--font-size-h4); }
+h5 { font-size: var(--font-size-body-large); }
+h6 { font-size: var(--font-size-body); }
+
+p {
+	margin: 0 0 1em;
+}
+
+small {
+	font-size: var(--font-size-small);
+}
+
+a {
+	color: var(--color-primary);
+	text-underline-offset: 0.2em;
+}
+
+a:hover {
+	color: var(--color-secondary);
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+}
+
+:focus-visible {
+	outline: 3px solid var(--color-primary);
+	outline-offset: 3px;
+	box-shadow: 0 0 0 3px var(--color-background);
+}
+
+/* Contenedor compartido; el padding está incluido en el ancho máximo. */
+.container {
+	width: 100%;
+	max-width: var(--container-max);
+	margin-inline: auto;
+	padding-inline: var(--container-padding);
+}
+
+@media (max-width: 600px) {
+	:root {
+		--container-padding: 16px;
+	}
+}
+
+/* Botones: combinar .btn con una de sus variantes. */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 48px;
+	padding: 0.75rem 1.5rem;
+	border: 1px solid var(--color-secondary);
+	border-radius: var(--radius);
+	background-color: transparent;
+	color: var(--color-secondary);
+	font-family: var(--font-family-base);
+	font-size: var(--font-size-body);
+	font-weight: var(--font-weight-semibold);
+	line-height: var(--line-height-heading);
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color var(--transition-fast),
+		color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btn:hover {
+	border-color: var(--color-secondary);
+	background-color: var(--color-secondary);
+	color: var(--color-text-light);
+}
+
+.btn-primary {
+	border-color: var(--color-primary);
+	background-color: var(--color-primary);
+	color: var(--color-text-light);
+}
+
+.btn-secondary {
+	border-color: var(--color-secondary);
+	background-color: var(--color-secondary);
+	color: var(--color-text-light);
+}
+
+.btn-secondary:hover {
+	border-color: var(--color-primary);
+	background-color: var(--color-primary);
+	color: var(--color-text-light);
+}
+
+.btn-outline {
+	border-color: var(--color-primary);
+	background-color: transparent;
+	color: var(--color-primary);
+}
+
+.btn-outline:hover {
+	border-color: var(--color-primary);
+	background-color: var(--color-primary);
+	color: var(--color-text-light);
+}
+
+.btn:disabled {
+	cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.btn {
+		transition: none;
+	}
+}
