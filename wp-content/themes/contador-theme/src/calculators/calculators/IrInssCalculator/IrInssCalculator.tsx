@@ -3,6 +3,7 @@ import { calculateIrInss } from '../../utils/calculateIrInss'
 import { formatCordobas } from '../../utils/currency'
 import type { IrInssResult } from '../../types/tax'
 import { InfoTooltip } from '../../components/InfoTooltip'
+import { CalculatorDetails } from '../../components/CalculatorDetails'
 import { ResultGroup } from '../../components/ResultGroup'
 import { ResultRow } from '../../components/ResultRow'
 import {
@@ -117,12 +118,12 @@ export function IrInssCalculator() {
   }
 
   return (
-    <section className="ir-calculator" aria-labelledby="ir-calculator-title">
-      <div className="ir-calculator__form-panel">
-        <div className="ir-calculator__form-heading">
-          <div className="ir-calculator__form-heading-copy">
+    <section className="calculator" aria-labelledby="ir-calculator-title">
+      <div className="calculator__form-panel">
+        <div className="calculator__form-heading">
+          <div className="calculator__form-heading-copy">
             <h2 id="ir-calculator-title">Calculadora de IR e INSS</h2>
-            <p className="ir-calculator__intro">
+            <p className="calculator__intro">
               Calcula una proyección mensual a partir de un salario bruto regular.
             </p>
           </div>
@@ -136,7 +137,7 @@ export function IrInssCalculator() {
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="ir-calculator__label-row">
+          <div className="calculator__label-row">
             <label htmlFor="gross-monthly-salary">Salario bruto mensual</label>
             <InfoTooltip
               id="ir-help-gross-input"
@@ -146,7 +147,7 @@ export function IrInssCalculator() {
               {explanations.gross.description}
             </InfoTooltip>
           </div>
-          <div className={`ir-calculator__input-wrap${error ? ' is-invalid' : ''}`}>
+          <div className={`calculator__input-wrap${error ? ' is-invalid' : ''}`}>
             <span aria-hidden="true">C$</span>
             <input
               ref={salaryInputRef}
@@ -164,20 +165,20 @@ export function IrInssCalculator() {
               onBlur={() => setSalaryDisplay(formatSalaryDisplay(salaryValue, true))}
             />
           </div>
-          <div className="ir-calculator__validation-slot">
-            {error && <p className="ir-calculator__error" id="salary-error" role="alert">{error}</p>}
+          <div className="calculator__validation-slot">
+            {error && <p className="calculator__error" id="salary-error" role="alert">{error}</p>}
           </div>
-          <button className="btn btn-primary ir-calculator__submit" type="submit">Calcular salario neto</button>
+          <button className="btn btn-primary calculator__submit" type="submit">Calcular salario neto</button>
         </form>
       </div>
 
-      <div className="ir-calculator__result-panel" aria-live="polite" aria-atomic="true">
+      <div className="calculator__result-panel" aria-live="polite" aria-atomic="true">
         {result ? (
           <>
-            <p className="ir-calculator__eyebrow">Resumen</p>
-            <div className="ir-calculator__deductions">
+            <p className="calculator__eyebrow">Resumen</p>
+            <div className="calculator__deductions">
               <h3>Deducciones estimadas</h3>
-              <dl className="ir-calculator__summary">
+              <dl className="calculator__summary">
                 <ResultRow
                   label="INSS laboral"
                   value={`−${formatCordobas(result.inssMonthly)}`}
@@ -204,14 +205,14 @@ export function IrInssCalculator() {
               </dl>
             </div>
 
-            <div className="ir-calculator__net-highlight">
+            <div className="calculator__net-highlight">
               <span>Salario neto estimado</span>
               <strong>{formatCordobas(result.netMonthly)}</strong>
             </div>
           </>
         ) : (
-          <div className="ir-calculator__empty">
-            <span className="ir-calculator__empty-icon" aria-hidden="true" />
+          <div className="calculator__empty">
+            <span className="calculator__empty-icon" aria-hidden="true" />
             <h3>Aquí verás tu salario neto</h3>
             <p>Ingresa tu salario bruto mensual y te mostraremos una estimación clara de tus deducciones.</p>
           </div>
@@ -219,29 +220,12 @@ export function IrInssCalculator() {
       </div>
 
       {result && (
-        <section className="ir-calculator__details" aria-labelledby="ir-calculator-details-title">
-          <header className="ir-calculator__details-heading">
-            <h3 id="ir-calculator-details-title">¿Quieres ver cómo se calculó?</h3>
-            <p>Consulta el desglose utilizado para obtener esta estimación de IR e INSS.</p>
-          </header>
-          <button
-            className="ir-calculator__details-toggle"
-            type="button"
-            aria-expanded={detailsOpen}
-            aria-controls="ir-calculator-details-content"
-            onClick={() => setDetailsOpen((open) => !open)}
-          >
-            <span>{detailsOpen ? 'Ocultar detalle del cálculo' : 'Ver detalle del cálculo'}</span>
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <path d="m5 7.5 5 5 5-5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
-            </svg>
-          </button>
-          <div
-            className="ir-calculator__details-content"
-            id="ir-calculator-details-content"
-            hidden={!detailsOpen}
-          >
-            <div className="ir-calculator__detail-groups">
+        <CalculatorDetails
+          id="ir-calculator-details"
+          description="Consulta el desglose utilizado para obtener esta estimación de IR e INSS."
+          open={detailsOpen}
+          onToggle={() => setDetailsOpen((open) => !open)}
+        >
               <ResultGroup title="Ingreso">
                 <ResultRow
                   label="Salario bruto mensual"
@@ -321,9 +305,7 @@ export function IrInssCalculator() {
                   variant="total"
                 />
               </ResultGroup>
-            </div>
-          </div>
-        </section>
+        </CalculatorDetails>
       )}
     </section>
   )
