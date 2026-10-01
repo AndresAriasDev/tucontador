@@ -1,4 +1,5 @@
-import { useState, type FormEvent, type MouseEvent } from 'react'
+import { DateRangeFields } from '../../components/DateRangeFields'
+import { useState, type FormEvent } from 'react'
 import { InfoTooltip } from '../../components/InfoTooltip'
 import { MoneyField, type MoneyValue } from '../../components/MoneyField'
 import { CalculatorDetails } from '../../components/CalculatorDetails'
@@ -12,16 +13,6 @@ const help = {
   period: 'El período permite estimar un aguinaldo completo o proporcional. También cuentan como tiempo efectivo las vacaciones disfrutadas, ausencias justificadas, permisos, asuetos y subsidios por enfermedad previstos en la ley.',
 }
 const emptyMoney = (): MoneyValue => ({ raw: '', valid: true })
-
-function openDatePicker(event: MouseEvent<HTMLInputElement>) {
-  // Pointer interaction only: keyboard editing and native fallback stay available.
-  if (event.detail === 0 || typeof event.currentTarget.showPicker !== 'function') return
-  try {
-    event.currentTarget.showPicker()
-  } catch {
-    // Unsupported contexts (for example embedded cross-origin pages) keep native behavior.
-  }
-}
 
 function salaryError(value: MoneyValue): string | undefined {
   if (!value.valid || !Number.isFinite(Number(value.raw))) return 'Ingresa un monto válido.'
@@ -57,7 +48,7 @@ export function AguinaldoCalculator() {
   }
 
   return (
-    <section className="calculator aguinaldo-calculator" aria-labelledby="aguinaldo-title">
+    <section className="calculator labor-calculator" aria-labelledby="aguinaldo-title">
       <div className="calculator__form-panel">
         <div className="calculator__form-heading">
           <div className="calculator__form-heading-copy">
@@ -69,26 +60,14 @@ export function AguinaldoCalculator() {
           </InfoTooltip>
         </div>
         <form onSubmit={submit} noValidate>
-          <div className="aguinaldo-fields">
+          <div className="labor-fields">
               <MoneyField id="aguinaldo-salary" label="Último salario mensual" help={help.salary} error={errors.salary} onChange={(value) => {
                 invalidate(); setSalary(value)
                 if (!value.valid) setErrors({ salary: 'Ingresa un monto válido.' })
               }} />
-            <fieldset className="aguinaldo-fieldset">
-              <legend><span className="calculator__label-row">Período trabajado <InfoTooltip id="aguinaldo-help-period" label="período trabajado" title="Tiempo efectivo de trabajo">{help.period}</InfoTooltip></span></legend>
-              <div className="aguinaldo-fields-grid">
-                <div>
-                  <label htmlFor="aguinaldo-start">Fecha de inicio</label>
-                  <input className="aguinaldo-control" id="aguinaldo-start" type="date" required value={startDate} max={endDate || undefined} onClick={openDatePicker} aria-invalid={Boolean(errors.startDate)} aria-describedby={errors.startDate ? 'aguinaldo-start-error' : undefined} onChange={(event) => { invalidate(); setStartDate(event.target.value) }} />
-                  {errors.startDate && <p className="calculator__error" id="aguinaldo-start-error" role="alert">{errors.startDate}</p>}
-                </div>
-                <div>
-                  <label htmlFor="aguinaldo-end">Fecha final</label>
-                  <input className="aguinaldo-control" id="aguinaldo-end" type="date" required value={endDate} min={startDate || undefined} onClick={openDatePicker} aria-invalid={Boolean(errors.endDate)} aria-describedby={errors.endDate ? 'aguinaldo-end-error' : undefined} onChange={(event) => { invalidate(); setEndDate(event.target.value) }} />
-                  {errors.endDate && <p className="calculator__error" id="aguinaldo-end-error" role="alert">{errors.endDate}</p>}
-                </div>
-              </div>
-            </fieldset>
+            <DateRangeFields id="aguinaldo" help={help.period} startDate={startDate} endDate={endDate} errors={errors}
+              onStartChange={(value) => { invalidate(); setStartDate(value) }}
+              onEndChange={(value) => { invalidate(); setEndDate(value) }} />
           </div>
           <button className="btn btn-primary calculator__submit" type="submit">Calcular aguinaldo</button>
         </form>
@@ -107,7 +86,7 @@ export function AguinaldoCalculator() {
             </div>
           )}
         </> : <div className="calculator__empty">
-          <span className="calculator__empty-icon aguinaldo-empty-icon" aria-hidden="true" />
+          <span className="calculator__empty-icon labor-empty-icon" aria-hidden="true" />
           <h3>Aquí verás tu aguinaldo</h3>
           <p>Ingresa tu información laboral y te mostraremos una estimación de tu aguinaldo.</p>
         </div>}

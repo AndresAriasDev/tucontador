@@ -16,6 +16,47 @@ const { calculateAguinaldo, isValidWorkDate, validateWorkPeriod } = await import
 const { calculateIrInss } = await import('../src/calculators/utils/calculateIrInss.ts')
 const { computeWorkPeriod, calculatePeriodAmounts, formatWorkPeriod } = await import('../src/calculators/calculators/AguinaldoCalculator/workPeriod.ts')
 const estimate = (startDate, endDate) => calculateAguinaldo({ monthlySalary: 20000, startDate, endDate })
+const { calculateVacation, calculateVacationAmounts, validateVacationInput } = await import('../src/calculators/calculators/VacationCalculator/calculateVacation.ts')
+const { formatVacationDays } = await import('../src/calculators/utils/vacationDays.ts')
+
+test('vacation monthly accrual supports 6, 12 and 18 months', () => {
+  for (const [months, expected] of [[6, 15], [12, 30], [18, 45]]) {
+    assert.equal(calculateVacationAmounts(20000, { months, days: 0 }, 0).accruedVacationDays, expected)
+  }
+  assert.equal(calculateVacationAmounts(20000, { months: 6, days: 0 }, 0).estimatedGrossValue, 10000)
+})
+test('vacation canonical example retains precision and subtracts taken days', () => {
+  const result = calculateVacationAmounts(20000, { months: 10, days: 15 }, 10)
+  assert.equal(result.vacationDaysFromMonths, 25)
+  assert.equal(result.vacationDaysFromExtraDays, 1.25)
+  assert.equal(result.accruedVacationDays, 26.25)
+  assert.equal(result.pendingVacationDays, 16.25)
+  assert.equal(result.dailySalary, 20000 / 30)
+  assert.equal(result.estimatedGrossValue.toFixed(2), '10833.33')
+  assert.equal(calculateVacation({ monthlySalary: 20000, startDate: '2025-01-01', endDate: '2025-11-15', vacationDaysTaken: 10 }).pendingVacationDays, 16.25)
+})
+test('vacation dates have no aguinaldo cycle or annual limit; leap years preserved', () => {
+  for (const [startDate, endDate, expected] of [['2025-01-01', '2026-06-30', 45], ['2023-12-01', '2024-11-30', 30], ['2024-01-31', '2024-02-29', 2.5]]) {
+    assert.equal(calculateVacation({ monthlySalary: 20000, startDate, endDate, vacationDaysTaken: 0 }).accruedVacationDays, expected)
+  }
+})
+test('vacation invalid inputs and excessive taken days are rejected, never clamped', () => {
+  const input = { monthlySalary: 20000, startDate: '2025-01-01', endDate: '2025-06-30', vacationDaysTaken: 0 }
+  for (const changes of [{ monthlySalary: 0 }, { monthlySalary: NaN }, { monthlySalary: Infinity }, { vacationDaysTaken: -1 }, { vacationDaysTaken: NaN }, { vacationDaysTaken: Infinity }, { vacationDaysTaken: 20 }, { startDate: '' }, { endDate: '2025-02-30' }, { endDate: '2024-12-31' }]) {
+    assert.throws(() => calculateVacation({ ...input, ...changes }), RangeError)
+    assert.ok(Object.keys(validateVacationInput({ ...input, ...changes })).length)
+  }
+  assert.equal(calculateVacation({ ...input, vacationDaysTaken: 12.5 }).pendingVacationDays, 2.5)
+  assert.equal(calculateVacation({ ...input, vacationDaysTaken: 15 }).estimatedGrossValue, 0)
+  assert.throws(() => calculateVacation({ ...input, monthlySalary: Number.MAX_VALUE, endDate: '2030-06-30' }), RangeError)
+})
+test('vacation day formatting is concise with at most two decimals', () => {
+  assert.equal(formatVacationDays(15), '15 días')
+  assert.equal(formatVacationDays(12.5), '12.5 días')
+  assert.equal(formatVacationDays(26.25), '26.25 días')
+  assert.equal(formatVacationDays(1 / 12), '0.08 días')
+  assert.equal(formatVacationDays(1), '1 día')
+})
 
 test('uses monthly salary directly and rejects invalid salary input', () => {
   const input = { monthlySalary: 20000, startDate: '2025-12-01', endDate: '2026-11-30' }

@@ -518,12 +518,12 @@
 }
 
 /* Fields unique to Aguinaldo; panels, amounts and details use the shared system. */
-#tucontador-calculator .aguinaldo-fields { display: grid; gap: 1.25rem; }
-#tucontador-calculator .aguinaldo-fields-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
-#tucontador-calculator .aguinaldo-fields-grid > div { min-width: 0; }
-#tucontador-calculator .aguinaldo-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
-#tucontador-calculator .aguinaldo-fieldset legend { padding: 0; font-weight: 700; }
-#tucontador-calculator .aguinaldo-control {
+#tucontador-calculator .labor-fields { display: grid; gap: 1.25rem; }
+#tucontador-calculator .labor-fields-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+#tucontador-calculator .labor-fields-grid > div { min-width: 0; }
+#tucontador-calculator .labor-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+#tucontador-calculator .labor-fieldset legend { padding: 0; font-weight: 700; }
+#tucontador-calculator .labor-control {
   display: block;
   width: 100%;
   min-width: 0;
@@ -538,39 +538,39 @@
   font-size: 1.05rem;
   transition: border-color 160ms ease;
 }
-#tucontador-calculator .aguinaldo-control[aria-invalid="true"] { border-color: var(--color-danger); }
-#tucontador-calculator .aguinaldo-control:not([aria-invalid="true"]):not(:focus):hover,
-#tucontador-calculator .aguinaldo-calculator .calculator__input-wrap:not(.is-invalid):not(:focus-within):hover {
+#tucontador-calculator .labor-control[aria-invalid="true"] { border-color: var(--color-danger); }
+#tucontador-calculator .labor-control:not([aria-invalid="true"]):not(:focus):hover,
+#tucontador-calculator .labor-calculator .calculator__input-wrap:not(.is-invalid):not(:focus-within):hover {
   border-color: color-mix(in srgb, var(--color-primary) 45%, var(--calculator-border));
 }
-#tucontador-calculator .aguinaldo-control:focus,
-#tucontador-calculator .aguinaldo-control:focus-visible,
-#tucontador-calculator .aguinaldo-calculator .calculator__input-wrap:focus-within {
+#tucontador-calculator .labor-control:focus,
+#tucontador-calculator .labor-control:focus-visible,
+#tucontador-calculator .labor-calculator .calculator__input-wrap:focus-within {
   border-color: var(--color-primary);
   outline: 0;
   box-shadow: none;
 }
-#tucontador-calculator .aguinaldo-control[type="date"] { color-scheme: light; }
-#tucontador-calculator .aguinaldo-control::-webkit-date-and-time-value { text-align: left; }
-#tucontador-calculator .aguinaldo-control::-webkit-calendar-picker-indicator {
+#tucontador-calculator .labor-control[type="date"] { color-scheme: light; }
+#tucontador-calculator .labor-control::-webkit-date-and-time-value { text-align: left; }
+#tucontador-calculator .labor-control::-webkit-calendar-picker-indicator {
   flex-shrink: 0;
   margin-left: 0.5rem;
   padding: 0.25rem;
   cursor: pointer;
 }
-#tucontador-calculator .aguinaldo-empty-icon::before {
+#tucontador-calculator .labor-empty-icon::before {
   -webkit-mask-image: url("../../assets/icons/calendar-check-2.svg");
   mask-image: url("../../assets/icons/calendar-check-2.svg");
 }
 #tucontador-calculator .aguinaldo-pending { margin-top: 1rem; background: var(--color-background); }
 #tucontador-calculator .aguinaldo-pending p { margin: 0.5rem 0 0; color: var(--color-text-muted); }
-#tucontador-calculator .aguinaldo-calculator .calculator-result-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-#tucontador-calculator .aguinaldo-calculator .calculator-result-row dd { white-space: normal; overflow-wrap: anywhere; }
+#tucontador-calculator .labor-calculator .calculator-result-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+#tucontador-calculator .labor-calculator .calculator-result-row dd { white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 520px) {
-  #tucontador-calculator .aguinaldo-fields-grid { grid-template-columns: minmax(0, 1fr); }
+  #tucontador-calculator .labor-fields-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 380px) {
-  #tucontador-calculator .aguinaldo-calculator .calculator-result-row { grid-template-columns: minmax(0, 1fr); }
+  #tucontador-calculator .labor-calculator .calculator-result-row { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
