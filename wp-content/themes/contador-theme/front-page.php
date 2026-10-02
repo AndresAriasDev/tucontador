@@ -241,51 +241,31 @@ get_header();
 	</section>
 	<?php
 	$calculator_tools = array(
-		array( 'title' => 'Calculadora de IR e INSS', 'description' => 'Calcula las deducciones correspondientes al IR y al INSS a partir de tu salario.', 'label' => 'Calcular IR e INSS', 'slug' => 'calculadora-ir-inss', 'icon' => 'salary', 'hint' => 'Salario · IR · INSS' ),
-		array( 'title' => 'Calculadora de aguinaldo', 'description' => 'Obtén una estimación del aguinaldo correspondiente según la información ingresada.', 'label' => 'Calcular aguinaldo', 'slug' => 'calculadora-aguinaldo', 'icon' => 'bonus', 'hint' => 'Salario · Tiempo trabajado' ),
+		array( 'title' => 'Calcula tu IR e INSS', 'slug' => 'ir-inss', 'icon' => 'salary' ),
+		array( 'title' => 'Calcula tu aguinaldo', 'slug' => 'aguinaldo', 'icon' => 'bonus' ),
+		array( 'title' => 'Calcula tus vacaciones', 'slug' => 'vacaciones', 'icon' => 'vacation' ),
+		array( 'title' => 'Calcula tu liquidación', 'slug' => 'liquidacion-laboral', 'icon' => 'settlement' ),
 	);
-	$calculators_page = get_page_by_path( 'calculadoras' );
 	?>
 	<section class="home-calculators" aria-labelledby="calculators-title">
 		<div class="container">
 			<div class="home-calculators__heading">
 				<h2 id="calculators-title">Calculadoras contables para Nicaragua</h2>
-				<p>Realiza cálculos relacionados con impuestos, salarios y obligaciones laborales utilizando herramientas gratuitas diseñadas para facilitar consultas frecuentes.</p>
+				<p>Consulta tu salario neto, aguinaldo, vacaciones y liquidación laboral con herramientas gratuitas diseñadas para Nicaragua.</p>
 			</div>
 			<div class="home-calculators__tools">
 				<?php foreach ( $calculator_tools as $tool ) : ?>
 					<?php
-					$tool_page = null;
-					foreach ( array( 'calculadoras/' . $tool['slug'], $tool['slug'] ) as $tool_path ) {
-						$candidate = get_page_by_path( $tool_path );
-						if ( $candidate instanceof WP_Post && 'publish' === $candidate->post_status ) {
-							$tool_page = $candidate;
-							break;
-						}
+					$tool_page = get_page_by_path( 'calculadoras/' . $tool['slug'] );
+					if ( ! $tool_page instanceof WP_Post || 'publish' !== $tool_page->post_status ) {
+						continue;
 					}
 					?>
-					<article class="home-calculators__tool">
-						<div class="home-calculators__toolbar" aria-hidden="true">
-							<span class="home-calculators__icon home-calculators__icon--<?php echo esc_attr( $tool['icon'] ); ?>"></span>
-							<span>Herramienta gratuita</span>
-						</div>
-						<h3><?php echo esc_html( $tool['title'] ); ?></h3>
-						<p><?php echo esc_html( $tool['description'] ); ?></p>
-						<div class="home-calculators__readout" aria-hidden="true"><span><?php echo esc_html( $tool['hint'] ); ?></span><span class="home-calculators__symbol">=</span></div>
-						<?php if ( $tool_page ) : ?>
-							<a class="btn home-calculators__button" href="<?php echo esc_url( get_permalink( $tool_page ) ); ?>"><?php echo esc_html( $tool['label'] ); ?><span class="home-calculators__chevron" aria-hidden="true"></span></a>
-						<?php else : ?>
-							<span class="home-calculators__pending">Próximamente: <?php echo esc_html( $tool['label'] ); ?></span>
-						<?php endif; ?>
-					</article>
+					<a class="home-calculators__tool" href="<?php echo esc_url( get_permalink( $tool_page ) ); ?>" aria-labelledby="calculator-<?php echo esc_attr( $tool['slug'] ); ?>">
+						<span class="home-calculators__icon home-calculators__icon--<?php echo esc_attr( $tool['icon'] ); ?>" aria-hidden="true"></span>
+						<h3 id="calculator-<?php echo esc_attr( $tool['slug'] ); ?>"><?php echo esc_html( $tool['title'] ); ?></h3>
+					</a>
 				<?php endforeach; ?>
-			</div>
-			<div class="home-calculators__more">
-				<?php if ( $calculators_page instanceof WP_Post && 'publish' === $calculators_page->post_status ) : ?>
-					<a href="<?php echo esc_url( get_permalink( $calculators_page ) ); ?>">Ver todas las calculadoras<span class="home-calculators__chevron" aria-hidden="true"></span></a>
-				<?php else : ?>
-					<span>Próximamente: todas las calculadoras</span>
-				<?php endif; ?>
 			</div>
 		</div>
 	</section>
