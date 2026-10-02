@@ -8,11 +8,12 @@ interface MoneyFieldProps {
   label: string
   error?: string
   help?: string
+  placeholder?: string
   onChange: (value: MoneyValue) => void
 }
 
 /** Uses the same parsing, grouping and caret utilities as IR/INSS. */
-export function MoneyField({ id, label, error, help, onChange }: MoneyFieldProps) {
+export function MoneyField({ id, label, error, help, placeholder = '20,000', onChange }: MoneyFieldProps) {
   const [raw, setRaw] = useState('')
   const [display, setDisplay] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -45,7 +46,7 @@ export function MoneyField({ id, label, error, help, onChange }: MoneyFieldProps
       </div>
       <div className={`calculator__input-wrap${error ? ' is-invalid' : ''}`}>
         <span aria-hidden="true">C$</span>
-        <input ref={inputRef} id={id} name={id} type="text" inputMode="decimal" autoComplete="off" spellCheck={false} placeholder="20,000" value={display}
+        <input ref={inputRef} id={id} name={id} type="text" inputMode="decimal" autoComplete="off" spellCheck={false} placeholder={placeholder} value={display}
           aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined}
           onChange={(event) => change(event.currentTarget.value, event.currentTarget.selectionStart ?? event.currentTarget.value.length)}
           onBlur={() => setDisplay(formatSalaryDisplay(raw, true))} />

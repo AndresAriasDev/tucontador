@@ -157,7 +157,7 @@ export function IrInssCalculator() {
               inputMode="decimal"
               autoComplete="off"
               spellCheck={false}
-              placeholder="20,000"
+              placeholder="Ej: 14,000"
               value={salaryDisplay}
               aria-invalid={Boolean(error)}
               aria-describedby={error ? 'salary-error' : undefined}

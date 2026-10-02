@@ -45,17 +45,16 @@ export function VacationCalculator() {
       </div>
       <form onSubmit={submit} noValidate>
         <div className="labor-fields">
-          <MoneyField id="vacation-salary" label="Salario mensual" help="Ingresa tu último salario mensual ordinario. Esta calculadora está diseñada para trabajadores con salario mensual fijo." error={errors.monthlySalary} onChange={(value) => {
+          <MoneyField id="vacation-salary" label="Salario mensual" placeholder="Ej: 14,000" help="Ingresa tu último salario mensual ordinario. Esta calculadora está diseñada para trabajadores con salario mensual fijo." error={errors.monthlySalary} onChange={(value) => {
             invalidate(); setSalary(value)
             if (!value.valid) setErrors({ monthlySalary: 'Ingresa un monto válido.' })
           }} />
-          <DateRangeFields id="vacation" startDate={startDate} endDate={endDate} errors={errors}
+          <DateRangeFields id="vacation" showLegend={false} startDate={startDate} endDate={endDate} errors={errors}
             help="Indica el período que deseas calcular. Determinadas interrupciones justificadas no interrumpen la acumulación del tiempo trabajado conforme al Código del Trabajo."
             onStartChange={(value) => { invalidate(); setStartDate(value) }} onEndChange={(value) => { invalidate(); setEndDate(value) }} />
           <div>
             <div className="calculator__label-row">
               <label htmlFor="vacation-taken">Vacaciones ya disfrutadas</label>
-              <InfoTooltip id="vacation-taken-help" label="vacaciones disfrutadas" title="Vacaciones disfrutadas">Ingresa los días de vacaciones que ya disfrutaste dentro del período indicado. Se restarán de los días acumulados para estimar tu saldo pendiente.</InfoTooltip>
             </div>
             <div className={`calculator__input-wrap${errors.vacationDaysTaken ? ' is-invalid' : ''}`}>
               <input id="vacation-taken" type="number" min="0" step="any" inputMode="decimal" required value={taken} aria-invalid={Boolean(errors.vacationDaysTaken)} aria-describedby={errors.vacationDaysTaken ? 'vacation-taken-unit vacation-taken-error' : 'vacation-taken-unit'} onChange={(event) => { invalidate(); setTaken(event.target.value) }} />

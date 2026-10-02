@@ -18,6 +18,30 @@ const { computeWorkPeriod, calculatePeriodAmounts, formatWorkPeriod } = await im
 const estimate = (startDate, endDate) => calculateAguinaldo({ monthlySalary: 20000, startDate, endDate })
 const { calculateVacation, calculateVacationAmounts, validateVacationInput } = await import('../src/calculators/calculators/VacationCalculator/calculateVacation.ts')
 const { formatVacationDays } = await import('../src/calculators/utils/vacationDays.ts')
+const { daysInMonth } = await import('../src/calculators/utils/workPeriod.ts')
+const { parseDateValue, formatDateValue, clampDate, initialPickerDate, wheelBounds } = await import('../src/calculators/utils/datePicker.ts')
+test('date picker preserves civil ISO dates and Gregorian leap rules', () => {
+  for (const [year, expected] of [[2024,29],[2026,28],[2100,28],[2000,29]]) {
+    assert.equal(daysInMonth(year, 2), expected)
+    assert.equal(clampDate({year,month:2,day:31}).day, expected)
+  }
+  assert.deepEqual(parseDateValue('2026-10-01'), {year:2026,month:10,day:1})
+  assert.equal(formatDateValue({year:2026,month:10,day:1}), '2026-10-01')
+  for (const invalid of ['', '2026-02-29','2026-1-1','0000-01-01']) assert.equal(parseDateValue(invalid), null)
+})
+test('date picker enforces partial-month bounds and initial draft priority', () => {
+  const min='2026-03-15', max='2026-10-20'
+  assert.equal(formatDateValue(clampDate({year:2026,month:3,day:14},min,max)), min)
+  assert.equal(formatDateValue(clampDate({year:2026,month:10,day:21},min,max)), max)
+  assert.deepEqual(wheelBounds({year:2026,month:3,day:15},'day',min,max),[15,31])
+  assert.deepEqual(wheelBounds({year:2026,month:10,day:20},'day',min,max),[1,20])
+  assert.deepEqual(wheelBounds({year:2026,month:10,day:20},'month',min,max),[3,10])
+  assert.equal(formatDateValue(initialPickerDate('',undefined,'2027-01-01',min,max)),max)
+  assert.equal(formatDateValue(initialPickerDate('',undefined,'2025-01-01',min,max)),min)
+  assert.equal(formatDateValue(initialPickerDate('','2026-06-01','2026-05-01',min,max)),'2026-06-01')
+  assert.equal(formatDateValue(initialPickerDate('2026-07-01','2026-06-01','2026-05-01',min,max)),'2026-07-01')
+  assert.throws(()=>clampDate({year:2026,month:3,day:15},max,min),RangeError)
+})
 const { calculateSettlement, calculateSeniorityIndemnity, calculatePendingSalary, validateSettlementInput } = await import('../src/calculators/calculators/SettlementCalculator/calculateSettlement.ts')
 const settlementInput = { monthlySalary: 20000, employmentStartDate: '2025-01-01', terminationDate: '2025-11-15', contractType: 'indefinite', terminationReason: 'dismissalWithoutJustCause', noticeGiven: null, vacationDaysTaken: 10, unpaidWorkDays: 12 }
 

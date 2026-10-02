@@ -1,3 +1,29 @@
+/* Shared civil-date field and modal. The dialog is in the browser top layer. */
+.date-field { min-width: 0; }
+.date-field__trigger { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; min-height: calc(46px + .75rem + 2px); margin-top: .5rem; padding: .375rem .875rem; border: 1px solid var(--color-border, #e4e7ec); border-radius: var(--radius, .5rem); background: var(--color-background, #fff); color: var(--color-text, #172033); font: inherit; text-align: left; cursor: pointer; }
+.date-field__trigger:focus-visible, .date-wheel:focus-visible, .date-picker__actions button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.date-field__trigger[aria-invalid="true"] { border-color: var(--color-danger); }
+.date-field__trigger:disabled { opacity: .55; cursor: not-allowed; }
+.date-field__icon { width: 1.25rem; height: 1.25rem; flex-shrink: 0; background: currentColor; mask: url('../../assets/icons/calendar-check-2.svg') center / contain no-repeat; }
+.date-field__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.date-field__helper { font-size: .875rem; color: var(--color-text-muted); }
+.date-picker { box-sizing: border-box; width: min(26rem, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto; padding: 1.5rem; border: 0; border-radius: var(--radius, .5rem); background: var(--color-background, #fff); color: var(--color-text, #172033); font-family: var(--font-family-base, 'Manrope', sans-serif); }
+.date-picker::backdrop { background: rgb(2 23 93 / .55); }
+.date-picker__header h2 { margin: 0; font-size: .875rem; font-weight: 600; line-height: 1.4; }
+.date-picker__header p { margin: .5rem 0 1rem; font-size: clamp(1.5rem, 6vw, 2rem); font-weight: 700; color: var(--color-secondary); }
+.date-picker__wheels { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.date-picker__wheels::before { content: ''; position: absolute; inset: 88px 0 auto; height: 44px; background: var(--color-background-soft); border-block: 1px solid var(--color-border); pointer-events: none; }
+.date-wheel { position: relative; height: 220px; min-width: 0; overflow: hidden; touch-action: none; user-select: none; cursor: grab; border-radius: .25rem; }
+.date-wheel:active { cursor: grabbing; }
+.date-wheel__track { transition: transform 100ms ease-out; }
+.date-wheel__value { display: grid; place-items: center; height: 44px; color: var(--color-text-muted); font-size: 1rem; }
+.date-wheel__value:first-child, .date-wheel__value:last-child { opacity: .4; }
+.date-wheel__value.is-selected { color: var(--color-primary); font-weight: 700; font-size: 1.25rem; }
+.date-picker__actions { display: flex; justify-content: flex-end; gap: .75rem; margin-top: 1.25rem; }
+.date-picker__actions button { min-height: 44px; padding: .65rem 1rem; border: 0; border-radius: var(--radius, .5rem); background: var(--color-background-soft); color: var(--color-primary); font: inherit; font-weight: 600; cursor: pointer; }
+.date-picker__actions .date-picker__accept { color: var(--color-text-light, #fff); background: var(--color-primary); }
+@media (prefers-reduced-motion: reduce) { .date-wheel__track { transition: none; } }
+
 .contador-calculator-page__hero {
   display: grid;
   min-height: clamp(8.75rem, 15vw, 12rem);
@@ -224,7 +250,6 @@
   margin: 0;
   padding: 0.4rem 0;
   line-height: 1.5;
-  border-bottom: 1px solid var(--calculator-border);
 }
 
 #tucontador-calculator .calculator-result-row dt {
@@ -549,14 +574,6 @@
   border-color: var(--color-primary);
   outline: 0;
   box-shadow: none;
-}
-#tucontador-calculator .labor-control[type="date"] { color-scheme: light; }
-#tucontador-calculator .labor-control::-webkit-date-and-time-value { text-align: left; }
-#tucontador-calculator .labor-control::-webkit-calendar-picker-indicator {
-  flex-shrink: 0;
-  margin-left: 0.5rem;
-  padding: 0.25rem;
-  cursor: pointer;
 }
 #tucontador-calculator .labor-empty-icon::before {
   -webkit-mask-image: url("../../assets/icons/calendar-check-2.svg");

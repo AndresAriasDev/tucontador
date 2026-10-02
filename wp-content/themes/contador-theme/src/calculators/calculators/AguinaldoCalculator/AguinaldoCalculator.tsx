@@ -9,7 +9,6 @@ import { formatCordobas } from '../../utils/currency'
 import { calculateAguinaldo, formatWorkDate, validateWorkPeriod, type AguinaldoResult } from './calculateAguinaldo'
 
 const help = {
-  salary: 'Ingresa el último salario mensual ordinario recibido. Esta calculadora está diseñada para trabajadores con salario mensual fijo.',
   period: 'El período permite estimar un aguinaldo completo o proporcional. También cuentan como tiempo efectivo las vacaciones disfrutadas, ausencias justificadas, permisos, asuetos y subsidios por enfermedad previstos en la ley.',
 }
 const emptyMoney = (): MoneyValue => ({ raw: '', valid: true })
@@ -61,11 +60,11 @@ export function AguinaldoCalculator() {
         </div>
         <form onSubmit={submit} noValidate>
           <div className="labor-fields">
-              <MoneyField id="aguinaldo-salary" label="Último salario mensual" help={help.salary} error={errors.salary} onChange={(value) => {
+              <MoneyField id="aguinaldo-salary" label="Último salario mensual" placeholder="Ej: 14,000" error={errors.salary} onChange={(value) => {
                 invalidate(); setSalary(value)
                 if (!value.valid) setErrors({ salary: 'Ingresa un monto válido.' })
               }} />
-            <DateRangeFields id="aguinaldo" help={help.period} startDate={startDate} endDate={endDate} errors={errors}
+            <DateRangeFields id="aguinaldo" showLegend={false} help={help.period} startDate={startDate} endDate={endDate} errors={errors}
               onStartChange={(value) => { invalidate(); setStartDate(value) }}
               onEndChange={(value) => { invalidate(); setEndDate(value) }} />
           </div>
@@ -76,7 +75,7 @@ export function AguinaldoCalculator() {
         {result ? <>
           <p className="calculator__eyebrow">Resumen</p>
           <dl className="calculator__summary">
-            <ResultRow label="Salario utilizado" value={formatCordobas(result.salaryBase)} help={{ id: 'aguinaldo-help-base', title: 'Salario utilizado', description: help.salary }} />
+            <ResultRow label="Salario utilizado" value={formatCordobas(result.salaryBase)} />
             <ResultRow label="Período computado" value={result.periodDescription} />
           </dl>
           {result.status === 'calculated' ? <div className="calculator__net-highlight"><span>Aguinaldo estimado</span><strong>{formatCordobas(result.amount)}</strong></div> : (
