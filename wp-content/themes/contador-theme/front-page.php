@@ -81,18 +81,17 @@ get_header();
 						</summary>
 						<div class="home-situations__panel" id="situation-panel-<?php echo esc_attr( $index ); ?>" role="region" aria-labelledby="situation-label-<?php echo esc_attr( $index ); ?>">
 							<span class="home-situations__number" aria-hidden="true"><?php echo esc_html( sprintf( '%02d', $index + 1 ) ); ?></span>
-							<p class="home-situations__eyebrow">Así puedo ayudarte</p>
 							<h3><?php echo esc_html( $situation[3] ); ?></h3>
 							<p><?php echo esc_html( $situation[1] ); ?></p>
-							<?php if ( $contact_page instanceof WP_Post && 'publish' === $contact_page->post_status ) : ?>
-								<div class="home-situations__action">
-									<a class="btn btn-primary" href="<?php echo esc_url( get_permalink( $contact_page ) ); ?>">Hablemos<span class="home-situations__contact-icon" aria-hidden="true"></span></a>
-								</div>
-							<?php endif; ?>
 						</div>
 					</details>
 				<?php endforeach; ?>
 			</div>
+			<?php if ( $contact_page instanceof WP_Post && 'publish' === $contact_page->post_status ) : ?>
+				<div class="home-situations__closing">
+					<a class="btn btn-primary" href="<?php echo esc_url( get_permalink( $contact_page ) ); ?>">Resolver mi situación</a>
+				</div>
+			<?php endif; ?>
 		</div>
 	</section>
 	<?php
@@ -155,14 +154,14 @@ get_header();
 						}
 						$destination = $destination ?: $services_page;
 					}
-					$link_label = $is_advisory ? 'Solicitar asesoría' : 'Conocer el servicio';
+					$link_label = 'Ver detalles';
 					?>
 					<article class="home-services__service">
 						<span class="home-services__number" aria-hidden="true"><?php echo esc_html( sprintf( '%02d', $index + 1 ) ); ?></span>
 						<h3><?php echo esc_html( $service['title'] ); ?></h3>
 						<p><?php echo esc_html( $service['text'] ); ?></p>
 						<?php if ( $destination instanceof WP_Post && 'publish' === $destination->post_status ) : ?>
-							<a class="home-services__link" href="<?php echo esc_url( get_permalink( $destination ) ); ?>" aria-label="<?php echo esc_attr( $link_label . ': ' . $service['title'] ); ?>"><?php echo esc_html( $link_label ); ?><span class="home-services__chevron" aria-hidden="true"></span></a>
+							<a class="home-services__link" href="<?php echo esc_url( get_permalink( $destination ) ); ?>" aria-label="<?php echo esc_attr( $link_label . ': ' . $service['title'] ); ?>"><?php echo esc_html( $link_label ); ?></a>
 						<?php endif; ?>
 					</article>
 				<?php endforeach; ?>
@@ -263,7 +262,7 @@ get_header();
 					?>
 					<a class="home-calculators__tool" href="<?php echo esc_url( get_permalink( $tool_page ) ); ?>" aria-labelledby="calculator-<?php echo esc_attr( $tool['slug'] ); ?>">
 						<span class="home-calculators__icon home-calculators__icon--<?php echo esc_attr( $tool['icon'] ); ?>" aria-hidden="true"></span>
-						<h3 id="calculator-<?php echo esc_attr( $tool['slug'] ); ?>"><?php echo esc_html( $tool['title'] ); ?></h3>
+						<h3 id="calculator-<?php echo esc_attr( $tool['slug'] ); ?>"><?php if ( 'ir-inss' === $tool['slug'] ) : ?><span class="home-calculators__salary-line">Calcula tu</span> <span class="home-calculators__salary-line">IR e INSS</span><?php else : ?><?php echo esc_html( $tool['title'] ); ?><?php endif; ?></h3>
 					</a>
 				<?php endforeach; ?>
 			</div>
@@ -298,6 +297,11 @@ get_header();
 				<?php endforeach; ?>
 			</div>
 		</div>
+		<?php if ( $contact_page instanceof WP_Post && 'publish' === $contact_page->post_status ) : ?>
+			<div class="container home-faq__action">
+				<a class="btn btn-primary" href="<?php echo esc_url( get_permalink( $contact_page ) ); ?>">Solicitar asesoría</a>
+			</div>
+		<?php endif; ?>
 	</section>
 </main>
 <?php

@@ -22,9 +22,8 @@ defined( 'ABSPATH' ) || exit;
 				<?php the_custom_logo(); ?>
 			</div>
 			<?php if ( has_nav_menu( 'primary-menu' ) ) : ?>
-				<button class="site-header__toggle" type="button" aria-expanded="false" aria-controls="primary-navigation" hidden>
+				<button class="site-header__toggle" type="button" aria-label="<?php esc_attr_e( 'Abrir menú principal', 'contador-theme' ); ?>" aria-expanded="false" aria-controls="primary-navigation" hidden>
 					<span class="site-header__toggle-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( 'Menú', 'contador-theme' ); ?></span>
 				</button>
 				<nav id="primary-navigation" class="site-header__nav" aria-label="<?php esc_attr_e( 'Menú principal', 'contador-theme' ); ?>">
 					<?php

@@ -11,6 +11,28 @@
 	top: 32px;
 }
 
+/* Estados de scroll: se conserva el overlay y la apariencia inicial. */
+.site-header.has-scroll-behavior {
+	position: fixed;
+	top: var(--header-scroll-offset, 0px);
+	transform: translateY(0);
+	transition: transform 220ms ease;
+}
+
+.site-header.has-scroll-behavior.is-scrolled {
+	background-color: var(--color-background, #fff);
+}
+
+.site-header.has-scroll-behavior.is-scroll-hidden {
+	transform: translateY(calc(-100% - var(--header-scroll-offset, 0px)));
+	pointer-events: none;
+}
+
+.site-header.has-scroll-behavior.has-keyboard-focus {
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
 .site-header__inner {
 	position: relative;
 	display: grid;
@@ -174,6 +196,23 @@
 .site-header__toggle-icon::after { top: 6px; }
 
 @media (max-width: 1100px) {
+	.site-header__toggle {
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+	}
+
+	.site-header__toggle-icon,
+	.site-header__toggle-icon::before,
+	.site-header__toggle-icon::after {
+		width: 22px;
+		height: 2.5px;
+		border-radius: 2px;
+	}
+	.site-header__toggle-icon::before { top: -7px; }
+	.site-header__toggle-icon::after { top: 7px; }
+
 	.site-header__inner {
 		grid-template-columns: minmax(0, 1fr) auto;
 	}
@@ -221,11 +260,110 @@
 	}
 }
 
+/* El diálogo ocupa el top layer, independiente del transform del header. */
+.site-header-mobile-dialog {
+	position: fixed;
+	inset: 0;
+	width: 100%;
+	max-width: none;
+	height: 100%;
+	max-height: none;
+	margin: 0;
+	padding: 1rem;
+	border: 0;
+	background: transparent;
+	color: var(--color-text);
+	overscroll-behavior: contain;
+	overflow: hidden;
+}
+.site-header-mobile-dialog[open] { display: grid; place-items: center; }
+.site-header-mobile-dialog::backdrop {
+	background: rgb(2 23 93 / 60%);
+	opacity: 0;
+	transition: opacity 180ms ease;
+}
+.site-header-mobile-dialog.is-open::backdrop { opacity: 1; }
+.site-header-mobile-panel {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: min(90vw, 500px);
+	max-width: 100%;
+	height: 80vh;
+	height: 80dvh;
+	max-height: calc(100dvh - 2rem);
+	padding: 4.5rem 1.5rem 2rem;
+	border-radius: calc(var(--radius) * 2);
+	background: var(--color-background);
+	opacity: 0;
+	transform: translateY(-12px);
+	transition: opacity 180ms ease, transform 180ms ease;
+	overflow: hidden;
+}
+.site-header-mobile-dialog.is-open .site-header-mobile-panel { opacity: 1; transform: translateY(0); }
+.site-header-mobile-close {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	border-radius: var(--radius);
+	background: var(--color-background-soft);
+	color: var(--color-secondary);
+	cursor: pointer;
+}
+.site-header-mobile-close::before,
+.site-header-mobile-close::after {
+	content: '';
+	position: absolute;
+	top: 21px;
+	left: 11px;
+	width: 22px;
+	height: 2px;
+	border-radius: 2px;
+	background: currentColor;
+	transform: rotate(45deg);
+}
+.site-header-mobile-close::after { transform: rotate(-45deg); }
+.site-header-mobile-close:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }
+.site-header-mobile-panel .site-header__nav {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	max-height: none;
+	padding: .25rem;
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	-webkit-overflow-scrolling: touch;
+}
+.site-header-mobile-panel .site-header__menu {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: .75rem;
+	margin-block: auto;
+	padding: 0;
+	box-shadow: none;
+	text-align: center;
+}
+.site-header-mobile-panel .site-header__menu a:not(.btn) { font-size: var(--font-size-h4); padding: .5rem; }
+.site-header-mobile-panel .site-header__menu > .menu-item-cta { margin-block: 1rem 0; }
+.site-header-mobile-panel .site-header__menu .sub-menu { margin-inline: 0; }
+@media (prefers-reduced-motion: reduce) {
+	.site-header-mobile-dialog::backdrop,
+	.site-header-mobile-panel { transition: none; }
+	.site-header-mobile-panel { transform: none; }
+}
+
 @media (max-width: 782px) {
-	.admin-bar .site-header { top: 46px; }
+	.admin-bar .site-header:not(.has-scroll-behavior) { top: 46px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+	.site-header.has-scroll-behavior,
 	.site-header__menu a:not(.btn),
 	.site-header__menu > .menu-item-cta > .btn,
 	.site-header__toggle {
