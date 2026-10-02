@@ -18,6 +18,113 @@ const { computeWorkPeriod, calculatePeriodAmounts, formatWorkPeriod } = await im
 const estimate = (startDate, endDate) => calculateAguinaldo({ monthlySalary: 20000, startDate, endDate })
 const { calculateVacation, calculateVacationAmounts, validateVacationInput } = await import('../src/calculators/calculators/VacationCalculator/calculateVacation.ts')
 const { formatVacationDays } = await import('../src/calculators/utils/vacationDays.ts')
+const { calculateSettlement, calculateSeniorityIndemnity, calculatePendingSalary, validateSettlementInput } = await import('../src/calculators/calculators/SettlementCalculator/calculateSettlement.ts')
+const settlementInput = { monthlySalary: 20000, employmentStartDate: '2025-01-01', terminationDate: '2025-11-15', contractType: 'indefinite', terminationReason: 'dismissalWithoutJustCause', noticeGiven: null, vacationDaysTaken: 10, unpaidWorkDays: 12 }
+
+test('settlement indemnity covers all prescribed years, fractions and the cap', () => {
+  for (const [months, expected] of [[6, 15], [8, 20], [12, 30], [24, 60], [30, 75], [36, 90], [42, 100], [48, 110], [60, 130], [72, 150], [120, 150]]) {
+    const result = calculateSeniorityIndemnity(20000, { months, days: 0 })
+    assert.equal(result.indemnityDays, expected)
+    assert.ok(Math.abs(result.amount - expected * 20000 / 30) < 1e-8)
+  }
+  assert.equal(calculateSeniorityIndemnity(20000, { months: 8, days: 0 }).amount.toFixed(2), '13333.33')
+  assert.equal(calculateSeniorityIndemnity(20000, { months: 0, days: 15 }).indemnityDays, 1.25)
+  assert.ok(Math.abs(calculateSeniorityIndemnity(20000, { months: 36, days: 15 }).indemnityDays - (90 + 20 * 15 / 360)) < 1e-8)
+})
+test('settlement pending salary preserves precision and accepts zero', () => {
+  assert.equal(calculatePendingSalary(20000, 12).amount, 8000)
+  assert.equal(calculatePendingSalary(20000, 0).amount, 0)
+  assert.equal(calculatePendingSalary(20000, 0.5).amount, 20000 / 60)
+  for (const days of [-1, NaN, Infinity]) assert.throws(() => calculatePendingSalary(20000, days), RangeError)
+})
+
+test('resignation requires an explicit boolean notice declaration', () => {
+  for (const noticeGiven of [null, undefined, '', 'true', 0]) {
+    const input = { ...settlementInput, terminationReason: 'resignation', noticeGiven }
+    assert.equal(validateSettlementInput(input).noticeGiven, 'Indica si realizaste el preaviso de 15 días.')
+    assert.throws(() => calculateSettlement(input), RangeError)
+  }
+})
+
+test('canonical resignation with notice reuses proportional indemnity without rounding', () => {
+  const input = { ...settlementInput, monthlySalary: 12000, employmentStartDate: '2026-01-01', terminationDate: '2026-10-01', terminationReason: 'resignation', noticeGiven: true, vacationDaysTaken: 0, unpaidWorkDays: 0 }
+  const r = calculateSettlement(input)
+  assert.deepEqual(r.seniority, { years: 0, months: 9, days: 1 })
+  assert.equal(r.indemnity.status, 'calculated')
+  assert.equal(r.includesIndemnity, true)
+  assert.ok(Math.abs(r.indemnity.indemnityDays - (22.5 + 1 / 12)) < 1e-10)
+  assert.deepEqual(r.indemnity, { status: 'calculated', ...calculateSeniorityIndemnity(12000, { months: 9, days: 1 }) })
+  assert.ok(Math.abs(r.vacation.accruedVacationDays - (22.5 + 1 / 12)) < 1e-10)
+  for (const amount of [r.vacation.estimatedGrossValue, r.aguinaldo.amount, r.indemnity.amount]) assert.ok(Math.abs(amount - 9033.333333333334) < 1e-8)
+  assert.ok(Math.abs(r.grossSettlement - 27100) < 1e-8)
+  const without = calculateSettlement({ ...input, noticeGiven: false })
+  assert.equal(without.indemnity.status, 'missingNotice')
+  assert.equal(without.indemnity.amount, null)
+  assert.equal(without.indemnity.indemnityDays, null)
+  assert.equal(without.includesIndemnity, false)
+  assert.deepEqual(without.vacation, r.vacation)
+  assert.deepEqual(without.aguinaldo, r.aguinaldo)
+  assert.deepEqual(without.pendingSalary, r.pendingSalary)
+  assert.ok(Math.abs(without.grossSettlement - (r.grossSettlement - r.indemnity.amount)) < 1e-8)
+})
+
+test('notice never influences other reasons or fixed-term contracts', () => {
+  for (const contractType of ['indefinite', 'fixedTerm']) {
+    for (const terminationReason of ['resignation', 'dismissalWithoutJustCause', 'authorizedJustCause', 'other']) {
+      if (contractType === 'indefinite' && terminationReason === 'resignation') continue
+      const results = [true, false, null].map((noticeGiven) => calculateSettlement({ ...settlementInput, contractType, terminationReason, noticeGiven }))
+      for (const result of results) {
+        assert.deepEqual(result.indemnity, results[0].indemnity)
+        assert.equal(result.grossSettlement, results[0].grossSettlement)
+      }
+    }
+  }
+})
+test('settlement vacation is identical to standalone engine including canonical example', () => {
+  const r = calculateSettlement(settlementInput)
+  assert.deepEqual(r.vacation, calculateVacation({ monthlySalary: 20000, startDate: '2025-01-01', endDate: '2025-11-15', vacationDaysTaken: 10 }))
+  assert.equal(r.vacation.accruedVacationDays, 26.25)
+  assert.equal(r.vacation.pendingVacationDays, 16.25)
+  assert.equal(r.vacation.estimatedGrossValue.toFixed(2), '10833.33')
+  assert.deepEqual(r.seniority, { years: 0, months: 10, days: 15 })
+})
+test('settlement selects current aguinaldo cycle, respects hiring, leap years and boundaries', () => {
+  for (const [employmentStartDate, terminationDate, startDate] of [
+    ['2020-01-01', '2026-08-15', '2025-12-01'],
+    ['2026-04-01', '2026-08-15', '2026-04-01'],
+    ['2020-01-01', '2024-02-29', '2023-12-01'],
+    ['2020-01-01', '2026-11-30', '2025-12-01'],
+    ['2020-01-01', '2026-12-01', '2026-12-01'],
+  ]) {
+    const r = calculateSettlement({ ...settlementInput, employmentStartDate, terminationDate, vacationDaysTaken: 0 })
+    assert.deepEqual(r.aguinaldo, calculateAguinaldo({ monthlySalary: 20000, startDate, endDate: terminationDate }))
+  }
+})
+test('settlement indemnity statuses and partial totals do not turn uncalculated amounts into zero', () => {
+  for (const [terminationReason, expected] of [['dismissalWithoutJustCause', 'calculated'], ['resignation', 'missingNotice'], ['authorizedJustCause', 'notIncluded'], ['other', 'requiresReview']]) {
+    for (const contractType of ['indefinite', 'fixedTerm']) {
+      const r = calculateSettlement({ ...settlementInput, contractType, terminationReason, noticeGiven: false })
+      assert.equal(r.indemnity.status, contractType === 'fixedTerm' ? 'notApplicableToContractType' : expected)
+      assert.equal(r.includesIndemnity, r.indemnity.status === 'calculated')
+      if (!r.includesIndemnity) assert.equal(r.indemnity.amount, null)
+      assert.equal(r.grossSettlement, r.pendingSalary.amount + r.vacation.estimatedGrossValue + r.aguinaldo.amount + (r.includesIndemnity ? r.indemnity.amount : 0))
+    }
+  }
+})
+test('settlement preserves short-period aguinaldo status and excludes only that unknown amount', () => {
+  const r = calculateSettlement({ ...settlementInput, employmentStartDate: '2026-04-01', terminationDate: '2026-04-15', vacationDaysTaken: 0 })
+  assert.equal(r.aguinaldo.status, 'below-threshold')
+  assert.equal(r.aguinaldo.amount, null)
+  assert.equal(r.includesAguinaldo, false)
+  assert.equal(r.grossSettlement, r.pendingSalary.amount + r.vacation.estimatedGrossValue + r.indemnity.amount)
+})
+test('settlement validates all inputs and rejects overflow', () => {
+  for (const changes of [{ monthlySalary: 0 }, { monthlySalary: NaN }, { monthlySalary: Infinity }, { employmentStartDate: '' }, { terminationDate: '2025-02-30' }, { terminationDate: '2024-12-31' }, { contractType: 'unknown' }, { terminationReason: 'unknown' }, { vacationDaysTaken: -1 }, { vacationDaysTaken: 100 }, { vacationDaysTaken: NaN }, { unpaidWorkDays: -1 }, { unpaidWorkDays: NaN }, { unpaidWorkDays: Infinity }]) {
+    assert.ok(Object.keys(validateSettlementInput({ ...settlementInput, ...changes })).length)
+    assert.throws(() => calculateSettlement({ ...settlementInput, ...changes }), RangeError)
+  }
+  assert.throws(() => calculateSettlement({ ...settlementInput, monthlySalary: Number.MAX_VALUE, unpaidWorkDays: Number.MAX_VALUE }), RangeError)
+})
 
 test('vacation monthly accrual supports 6, 12 and 18 months', () => {
   for (const [months, expected] of [[6, 15], [12, 30], [18, 45]]) {
