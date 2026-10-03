@@ -40,46 +40,6 @@
 	selector.classList.add('is-enhanced');
 })();
 
-/* Módulo independiente: selector de perfiles y acordeón en pantallas pequeñas. */
-(() => {
-	'use strict';
-	const root = document.querySelector('[data-profiles]');
-	if (!root) return;
-	const items = [...root.querySelectorAll('.home-profiles__item')];
-	const buttons = items.map(item => item.querySelector('button'));
-	const panels = items.map(item => item.querySelector('.home-profiles__panel'));
-	const mobile = window.matchMedia('(max-width: 900px)');
-	let active = 0;
-	const select = (index) => {
-		active = index;
-		items.forEach((item, position) => {
-			const open = position === index;
-			item.classList.toggle('is-active', open);
-			buttons[position].setAttribute('aria-expanded', String(open));
-			panels[position].hidden = !open;
-		});
-	};
-	buttons.forEach((button, index) => {
-		button.disabled = false;
-		button.addEventListener('click', () => select(mobile.matches && active === index ? -1 : index));
-		button.addEventListener('keydown', event => {
-			const nextKey = mobile.matches ? 'ArrowDown' : 'ArrowRight';
-			const previousKey = mobile.matches ? 'ArrowUp' : 'ArrowLeft';
-			let next;
-			if (event.key === nextKey) next = (index + 1) % items.length;
-			if (event.key === previousKey) next = (index + items.length - 1) % items.length;
-			if (event.key === 'Home') next = 0;
-			if (event.key === 'End') next = items.length - 1;
-			if (next === undefined) return;
-			event.preventDefault();
-			buttons[next].focus();
-			select(next);
-		});
-	});
-	mobile.addEventListener('change', () => { if (!mobile.matches && active < 0) select(0); });
-	select(0);
-})();
-
 /* FAQ: apertura exclusiva de paneles; el contenido permanece en el HTML. */
 (() => {
 	'use strict';

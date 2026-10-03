@@ -21,6 +21,12 @@ $footer_links = array(
 	'Sobre mí' => $footer_page_url( 'sobre-mi' ),
 	'Contacto' => $footer_contact_url,
 );
+$footer_calculator_links = array(
+	'Calculadora IR e INSS' => home_url( '/calculadoras/ir-inss/' ),
+	'Calculadora de Aguinaldo' => home_url( '/calculadoras/aguinaldo/' ),
+	'Calculadora de Vacaciones' => home_url( '/calculadoras/vacaciones/' ),
+	'Calculadora de Liquidación Laboral' => home_url( '/calculadoras/liquidacion-laboral/' ),
+);
 $footer_legal = array(
 	'Términos y condiciones' => $footer_page_url( 'terminos-y-condiciones' ),
 	'Política de privacidad' => get_privacy_policy_url() ?: $footer_page_url( 'politica-de-privacidad' ),
@@ -37,9 +43,14 @@ $footer_legal = array(
 		</div>
 		<nav aria-labelledby="footer-links-title">
 			<h2 id="footer-links-title">Enlaces rápidos</h2>
-			<ul class="site-footer__links">
+			<ul class="site-footer__links site-footer__links--desktop">
 				<?php foreach ( $footer_links as $label => $url ) : ?>
 					<li><?php if ( $url ) : ?><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a><?php else : ?><span><?php echo esc_html( $label ); ?></span><?php endif; ?></li>
+				<?php endforeach; ?>
+			</ul>
+			<ul class="site-footer__links site-footer__links--mobile">
+				<?php foreach ( $footer_calculator_links as $label => $url ) : ?>
+					<li><a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a></li>
 				<?php endforeach; ?>
 			</ul>
 		</nav>

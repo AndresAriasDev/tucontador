@@ -208,37 +208,6 @@ get_header();
 		</div>
 	</section>
 	<?php
-	$client_profiles = array(
-		array( 'Nuevos emprendedores', 'Comienza tu negocio con mayor claridad sobre tus obligaciones contables y tributarias.', 'chart-line.svg' ),
-		array( 'Pequeños negocios', 'Delega la gestión contable para dedicar más tiempo a operar y hacer crecer tu negocio.', 'calculator.svg' ),
-		array( 'Empresas pymes', 'Mantén organizada tu información contable y recibe acompañamiento para cumplir con tus obligaciones.', 'notebook-pen.svg' ),
-		array( 'Profesionales independientes', 'Recibe orientación y apoyo para gestionar correctamente tus declaraciones y responsabilidades tributarias.', 'clipboard-pen.svg' ),
-	);
-	?>
-	<section class="home-profiles" aria-labelledby="profiles-title">
-		<div class="container">
-			<div class="home-profiles__heading">
-				<h2 id="profiles-title">Servicios contables para negocios y profesionales en Nicaragua</h2>
-				<p>Cada cliente tiene necesidades diferentes. Los servicios están dirigidos tanto a quienes están comenzando como a negocios que ya operan y necesitan apoyo profesional para gestionar su contabilidad.</p>
-			</div>
-			<div class="home-profiles__selector" data-profiles>
-				<?php foreach ( $client_profiles as $index => $profile ) : ?>
-					<div class="home-profiles__item">
-						<h3>
-							<button class="home-profiles__trigger" id="profile-trigger-<?php echo esc_attr( $index ); ?>" type="button" aria-expanded="true" aria-controls="profile-panel-<?php echo esc_attr( $index ); ?>" disabled>
-								<span class="home-profiles__icon home-profiles__icon--<?php echo esc_attr( pathinfo( $profile[2], PATHINFO_FILENAME ) ); ?>" aria-hidden="true"></span>
-								<span class="home-profiles__name"><?php foreach ( explode( ' ', $profile[0] ) as $profile_word ) : ?><span><?php echo esc_html( $profile_word ); ?></span> <?php endforeach; ?></span>
-							</button>
-						</h3>
-						<div class="home-profiles__panel" id="profile-panel-<?php echo esc_attr( $index ); ?>" role="region" aria-labelledby="profile-trigger-<?php echo esc_attr( $index ); ?>">
-							<p><?php echo esc_html( $profile[1] ); ?></p>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-	</section>
-	<?php
 	$calculator_tools = array(
 		array( 'title' => 'Calcula tu IR e INSS', 'slug' => 'ir-inss', 'icon' => 'salary' ),
 		array( 'title' => 'Calcula tu aguinaldo', 'slug' => 'aguinaldo', 'icon' => 'bonus' ),
