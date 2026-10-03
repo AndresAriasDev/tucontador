@@ -4,13 +4,17 @@
  */
 
 get_header();
+$is_ir_inss = 'ir-inss' === get_post_field('post_name', get_queried_object_id());
 ?>
 
-<main class="contador-calculator-page">
+<main class="contador-calculator-page<?php echo $is_ir_inss ? ' contador-calculator-page--ir-inss' : ''; ?>">
     <?php while (have_posts()) : the_post(); ?>
         <header class="contador-calculator-page__hero" aria-labelledby="calculator-page-title">
             <div class="container">
-                <h1 id="calculator-page-title"><?php the_title(); ?></h1>
+                <h1 id="calculator-page-title"><?php if ($is_ir_inss) : ?>Calculadora de IR e INSS<?php else : the_title(); endif; ?></h1>
+                <?php if ($is_ir_inss) : ?>
+                    <p class="contador-calculator-page__description">Estima tu salario neto mensual y conoce cuánto corresponde a INSS e IR según la normativa vigente en Nicaragua.</p>
+                <?php endif; ?>
             </div>
         </header>
 

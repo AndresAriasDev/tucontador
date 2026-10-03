@@ -49,6 +49,20 @@
   line-height: 1.1;
 }
 
+.contador-calculator-page--ir-inss {
+  background: #ebebfc;
+}
+
+.contador-calculator-page--ir-inss .contador-calculator-page__description {
+  max-width: 64ch;
+  margin: 1rem auto 0;
+  color: var(--color-text-muted, #667085);
+}
+
+.contador-calculator-page--ir-inss #tucontador-calculator .calculator__result-panel {
+  background: var(--color-background, #fff);
+}
+
 #tucontador-calculator {
   --calculator-border: var(--color-border, #e4e7ec);
   --calculator-surface: var(--color-background-soft, #f6f7fb);

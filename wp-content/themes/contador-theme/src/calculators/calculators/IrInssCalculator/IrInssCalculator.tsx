@@ -2,7 +2,6 @@ import { useRef, useState, type FormEvent } from 'react'
 import { calculateIrInss } from '../../utils/calculateIrInss'
 import { formatCordobas } from '../../utils/currency'
 import type { IrInssResult } from '../../types/tax'
-import { InfoTooltip } from '../../components/InfoTooltip'
 import { CalculatorDetails } from '../../components/CalculatorDetails'
 import { ResultGroup } from '../../components/ResultGroup'
 import { ResultRow } from '../../components/ResultRow'
@@ -19,37 +18,6 @@ function getBracketLabel(result: IrInssResult): string {
   if (maximum === null) return `Más de ${formatCordobas(minimum)}`
   return `${formatCordobas(lowerBound)} – ${formatCordobas(maximum)}`
 }
-
-const explanations = {
-  gross: {
-    title: 'Salario bruto mensual',
-    description: 'Es el salario mensual antes de aplicar deducciones como INSS e IR.',
-  },
-  inss: {
-    title: 'INSS laboral',
-    description: 'Es el aporte del trabajador al Instituto Nicaragüense de Seguridad Social. Para esta estimación se aplica la tasa configurada actualmente en la calculadora.',
-  },
-  taxable: {
-    title: 'Base mensual después del INSS',
-    description: 'Es el salario bruto menos el aporte laboral al INSS. Esta cantidad se utiliza para proyectar la renta neta anual en esta calculadora.',
-  },
-  annualIncome: {
-    title: 'Renta neta anual proyectada',
-    description: 'Es la proyección a 12 meses de la base mensual utilizada para determinar el rango correspondiente del IR.',
-  },
-  bracket: {
-    title: 'Rango de IR aplicado',
-    description: 'Indica el rango de la tarifa progresiva del IR en el que se encuentra la renta neta anual proyectada. No significa que todo el ingreso se grave con el porcentaje de ese rango.',
-  },
-  annualTax: {
-    title: 'IR anual calculado',
-    description: 'Es el impuesto anual estimado después de aplicar la tarifa progresiva correspondiente.',
-  },
-  monthlyTax: {
-    title: 'IR mensual estimado',
-    description: 'Es la estimación mensual obtenida a partir del IR anual calculado.',
-  },
-} as const
 
 export function IrInssCalculator() {
   const [salaryValue, setSalaryValue] = useState('')
@@ -118,34 +86,11 @@ export function IrInssCalculator() {
   }
 
   return (
-    <section className="calculator" aria-labelledby="ir-calculator-title">
+    <section className="calculator" aria-label="Calculadora de IR e INSS">
       <div className="calculator__form-panel">
-        <div className="calculator__form-heading">
-          <div className="calculator__form-heading-copy">
-            <h2 id="ir-calculator-title">Calculadora de IR e INSS</h2>
-            <p className="calculator__intro">
-              Calcula una proyección mensual a partir de un salario bruto regular.
-            </p>
-          </div>
-          <InfoTooltip
-            id="ir-help-about-calculator"
-            label="la calculadora de IR e INSS"
-            title="Sobre esta calculadora"
-          >
-            Esta herramienta ofrece una estimación informativa del IR, INSS y salario neto a partir de un salario mensual regular. El resultado no sustituye una revisión contable individual.
-          </InfoTooltip>
-        </div>
-
         <form onSubmit={handleSubmit} noValidate>
           <div className="calculator__label-row">
             <label htmlFor="gross-monthly-salary">Salario bruto mensual</label>
-            <InfoTooltip
-              id="ir-help-gross-input"
-              label="salario bruto mensual"
-              title={explanations.gross.title}
-            >
-              {explanations.gross.description}
-            </InfoTooltip>
           </div>
           <div className={`calculator__input-wrap${error ? ' is-invalid' : ''}`}>
             <span aria-hidden="true">C$</span>
@@ -168,7 +113,7 @@ export function IrInssCalculator() {
           <div className="calculator__validation-slot">
             {error && <p className="calculator__error" id="salary-error" role="alert">{error}</p>}
           </div>
-          <button className="btn btn-primary calculator__submit" type="submit">Calcular salario neto</button>
+          <button className="btn btn-primary calculator__submit" type="submit">Calcular mi salario neto</button>
         </form>
       </div>
 
@@ -182,20 +127,10 @@ export function IrInssCalculator() {
                 <ResultRow
                   label="INSS laboral"
                   value={`−${formatCordobas(result.inssMonthly)}`}
-                  help={{
-                    id: 'ir-help-inss-summary',
-                    title: explanations.inss.title,
-                    description: explanations.inss.description,
-                  }}
                 />
                 <ResultRow
                   label="IR mensual"
                   value={`−${formatCordobas(result.monthlyTax)}`}
-                  help={{
-                    id: 'ir-help-monthly-summary',
-                    title: explanations.monthlyTax.title,
-                    description: explanations.monthlyTax.description,
-                  }}
                 />
                 <ResultRow
                   label="Total de deducciones"
@@ -230,11 +165,6 @@ export function IrInssCalculator() {
                 <ResultRow
                   label="Salario bruto mensual"
                   value={formatCordobas(result.grossMonthly)}
-                  help={{
-                    id: 'ir-help-gross-detail',
-                    title: explanations.gross.title,
-                    description: explanations.gross.description,
-                  }}
                 />
               </ResultGroup>
               <ResultGroup title="Deducción INSS">
@@ -242,59 +172,29 @@ export function IrInssCalculator() {
                   label="INSS laboral"
                   value={formatCordobas(result.inssMonthly)}
                   highlightValue
-                  help={{
-                    id: 'ir-help-inss-detail',
-                    title: explanations.inss.title,
-                    description: explanations.inss.description,
-                  }}
                 />
                 <ResultRow
                   label="Base mensual después del INSS"
                   value={formatCordobas(result.taxableMonthly)}
-                  help={{
-                    id: 'ir-help-taxable-detail',
-                    title: explanations.taxable.title,
-                    description: explanations.taxable.description,
-                  }}
                 />
               </ResultGroup>
               <ResultGroup title="Cálculo del IR">
                 <ResultRow
                   label="Renta neta anual proyectada"
                   value={formatCordobas(result.projectedAnnualIncome)}
-                  help={{
-                    id: 'ir-help-annual-income-detail',
-                    title: explanations.annualIncome.title,
-                    description: explanations.annualIncome.description,
-                  }}
                 />
                 <ResultRow
                   label="Rango de IR aplicado"
                   value={getBracketLabel(result)}
-                  help={{
-                    id: 'ir-help-bracket-detail',
-                    title: explanations.bracket.title,
-                    description: explanations.bracket.description,
-                  }}
                 />
                 <ResultRow
                   label="IR anual calculado"
                   value={formatCordobas(result.annualTax)}
-                  help={{
-                    id: 'ir-help-annual-tax-detail',
-                    title: explanations.annualTax.title,
-                    description: explanations.annualTax.description,
-                  }}
                 />
                 <ResultRow
                   label="IR mensual estimado"
                   value={formatCordobas(result.monthlyTax)}
                   highlightValue
-                  help={{
-                    id: 'ir-help-monthly-tax-detail',
-                    title: explanations.monthlyTax.title,
-                    description: explanations.monthlyTax.description,
-                  }}
                 />
               </ResultGroup>
               <ResultGroup title="Resultado">
