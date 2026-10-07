@@ -117,4 +117,39 @@ add_filter( 'nav_menu_link_attributes', 'contador_theme_header_cta_attributes', 
 
 
 
+/** Recursos exclusivos de la página individual de Servicios contables. */
+function contador_theme_enqueue_accounting_service_styles() {
+	if ( ! is_page( 'servicios-contables' ) ) {
+		return;
+	}
+	$css_file = 'assets/css/pages/servicios-contables.css';
+	wp_enqueue_style(
+		'contador-theme-accounting-service',
+		get_theme_file_uri( $css_file ),
+		array( 'contador-theme-global' ),
+		(string) filemtime( get_theme_file_path( $css_file ) )
+	);
+	$js_file = 'assets/js/pages/servicios-contables.js';
+	wp_enqueue_script(
+		'contador-theme-accounting-service',
+		get_theme_file_uri( $js_file ),
+		array( 'contador-theme-header' ),
+		(string) filemtime( get_theme_file_path( $js_file ) ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_accounting_service_styles' );
+
+/** Recursos FAQ compartidos por las páginas que utilizan el componente. */
+function contador_theme_enqueue_faq_assets() {
+	if ( ! is_front_page() && ! is_page( 'servicios-contables' ) ) {
+		return;
+	}
+	$css_file = 'assets/css/components/faq.css';
+	$js_file = 'assets/js/components/faq.js';
+	wp_enqueue_style( 'contador-theme-faq', get_theme_file_uri( $css_file ), array( 'contador-theme-global' ), (string) filemtime( get_theme_file_path( $css_file ) ) );
+	wp_enqueue_script( 'contador-theme-faq', get_theme_file_uri( $js_file ), array(), (string) filemtime( get_theme_file_path( $js_file ) ), true );
+}
+add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_faq_assets', 20 );
+
 require_once get_template_directory() . '/inc/calculators.php';

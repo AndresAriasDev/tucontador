@@ -247,31 +247,13 @@ get_header();
 		array( '¿Puedo solicitar una asesoría sin contratar un servicio mensual?', 'Sí. Si tienes una situación o duda específica, puedes solicitar una asesoría para revisar tu caso y determinar qué necesitas hacer.' ),
 	);
 	?>
-	<section class="home-faq" aria-labelledby="faq-title">
-		<div class="container">
-			<h2 id="faq-title">Preguntas frecuentes sobre servicios contables</h2>
-			<div class="home-faq__list" data-home-faq>
-				<?php foreach ( $home_faqs as $index => $faq ) : ?>
-					<div class="home-faq__item">
-						<h3>
-							<button class="home-faq__trigger" id="faq-question-<?php echo esc_attr( $index ); ?>" type="button" aria-expanded="true" aria-controls="faq-answer-<?php echo esc_attr( $index ); ?>" disabled>
-								<span><?php echo esc_html( $faq[0] ); ?></span>
-								<span class="home-faq__indicator" aria-hidden="true"></span>
-							</button>
-						</h3>
-						<div class="home-faq__answer" id="faq-answer-<?php echo esc_attr( $index ); ?>" role="region" aria-labelledby="faq-question-<?php echo esc_attr( $index ); ?>">
-							<p><?php echo esc_html( $faq[1] ); ?></p>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
-		<?php if ( $contact_page instanceof WP_Post && 'publish' === $contact_page->post_status ) : ?>
-			<div class="container home-faq__action">
-				<a class="btn btn-primary" href="<?php echo esc_url( get_permalink( $contact_page ) ); ?>">Solicitar asesoría</a>
-			</div>
-		<?php endif; ?>
-	</section>
+	<?php
+	get_template_part( 'template-parts/components/faq', null, array(
+		'title' => 'Preguntas frecuentes sobre servicios contables',
+		'items' => $home_faqs,
+		'action_url' => $contact_page instanceof WP_Post && 'publish' === $contact_page->post_status ? get_permalink( $contact_page ) : '',
+	) );
+	?>
 </main>
 <?php
 get_footer();

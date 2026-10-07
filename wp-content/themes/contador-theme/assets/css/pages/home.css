@@ -3,8 +3,7 @@
 .home-services__heading h2,
 .home-services__closing h2,
 .home-office-cta__content h2,
-.home-calculators__heading h2,
-.home-faq h2 {
+.home-calculators__heading h2 {
 	line-height: 1.1;
 }
 
@@ -172,9 +171,6 @@
     margin-top: 3rem !important;
 }
 
-.home-faq__action {
-    margin-top: 3rem !important;
-}
 		.home-hero {
 	padding-top: 6rem;
 }
@@ -632,67 +628,11 @@
  .home-calculators__tool:hover, .home-calculators__tool:hover .home-calculators__icon { transform: none; }
 }
 
-/* Preguntas frecuentes: filas completas, sin sombras ni cajas independientes. */
-.home-faq { padding-block: var(--section-spacing); background-color: var(--color-background); }
-.home-faq__action { margin-top: 6rem; text-align: center; }
-.home-faq__action .btn { max-width: 100%; }
-.home-faq h2 { max-width: 30ch; margin: 0 auto 2.5rem; text-align: center; color: var(--color-secondary); text-wrap: balance; }
-.home-faq__list { max-width: 60rem; margin-inline: auto; border-top: 1px solid var(--color-border); }
-.home-faq__item { border-bottom: 1px solid var(--color-border); border-radius: var(--radius); transition: background-color var(--transition-fast); }
-.home-faq__item.is-open { background-color: color-mix(in srgb, var(--color-primary) 4%, var(--color-background)); }
-.home-faq__item h3 { margin: 0; font-size: var(--font-size-body-large); }
-.home-faq__trigger {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 1.5rem;
-	width: 100%;
-	min-height: 64px;
-	padding: 1.25rem 1.5rem;
-	border: 0;
-	border-radius: var(--radius);
-	background: transparent;
-	color: var(--color-text);
-	font: inherit;
-	font-weight: var(--font-weight-semibold);
-	line-height: 1.45;
-	text-align: left;
-	cursor: pointer;
-	transition: color var(--transition-fast);
-}
-.home-faq__trigger:disabled { cursor: default; opacity: 1; }
-.home-faq__trigger:hover:not(:disabled),
-.home-faq__trigger[aria-expanded='true'] { color: var(--color-primary); }
-.home-faq__trigger:focus-visible { outline-offset: -3px; }
-.home-faq__indicator { position: relative; width: 18px; height: 18px; flex: 0 0 18px; }
-.home-faq__indicator::before,
-.home-faq__indicator::after { content: ''; position: absolute; inset: 8px 1px auto; height: 2px; background: currentColor; }
-.home-faq__indicator::after { transform: rotate(90deg); transition: transform var(--transition-fast); }
-.home-faq__trigger[aria-expanded='true'] .home-faq__indicator::after { transform: rotate(0); }
-.home-faq__answer { padding: 0 1.5rem 1.5rem; }
-.home-faq__answer[hidden] { display: none; }
-.home-faq__answer:not([hidden]) { animation: home-faq-reveal 180ms ease-out; }
-.home-faq__answer p { max-width: 78ch; margin: 0; color: var(--color-text-muted); }
-@keyframes home-faq-reveal { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 600px) {
-	.home-faq h2 { margin-bottom: 1.75rem; }
-	.home-faq__item h3 { font-size: var(--font-size-body); }
-	.home-faq__trigger { padding: 1rem; gap: 1rem; }
-	.home-faq__answer { padding: 0 1rem 1.25rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-	.home-faq__item,
-	.home-faq__trigger,
-	.home-faq__indicator::after { transition: none; }
-	.home-faq__answer:not([hidden]) { animation: none; }
-}
-
 /* Escala secundaria compartida de la Home, independiente del H1 del Hero. */
 .home-situations__heading h2,
 .home-services__heading h2,
 .home-services__closing h2,
 .home-office-cta__content h2,
-.home-calculators__heading h2,
-.home-faq h2 {
+.home-calculators__heading h2 {
 	font-size: clamp(1.75rem, 3vw, 2.5rem);
 }
