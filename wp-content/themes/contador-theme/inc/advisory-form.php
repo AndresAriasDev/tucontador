@@ -13,7 +13,7 @@ function contador_enqueue_advisory_assets() {
   wp_enqueue_script( 'contador-advisory', get_theme_file_uri( 'dist/' . $entry['file'] ), array(), null, true );
 }
 function contador_advisory_page_assets() {
-  if ( is_page( array( 'servicios-contables', 'declaraciones-de-impuestos' ) ) ) contador_enqueue_advisory_assets();
+  if ( is_page( array( 'servicios-contables', 'declaraciones-de-impuestos', 'asesoria-contable-tributaria' ) ) ) contador_enqueue_advisory_assets();
 }
 add_action( 'wp_enqueue_scripts', 'contador_advisory_page_assets' );
 

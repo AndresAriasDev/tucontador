@@ -1,7 +1,7 @@
 <?php
 /**
  * Composición compartida de páginas individuales de servicios.
- * Args: title, description, needs_title, needs_intro (opcional), needs,
+ * Args: title, description, needs_title, needs_intro (texto o lista de párrafos, opcional), needs,
  * included_title, included_intro, included, service, faq_title y faqs.
  */
 defined( 'ABSPATH' ) || exit;
@@ -36,7 +36,9 @@ get_header();
 			<div class="accounting-service__needs-intro">
 				<h2 id="necesidades-title"><?php echo esc_html( $args['needs_title'] ); ?></h2>
 				<?php if ( ! empty( $args['needs_intro'] ) ) : ?>
-					<p><?php echo esc_html( $args['needs_intro'] ); ?></p>
+					<?php foreach ( (array) $args['needs_intro'] as $paragraph ) : ?>
+						<p><?php echo esc_html( $paragraph ); ?></p>
+					<?php endforeach; ?>
 				<?php endif; ?>
 			</div>
 			<div class="accounting-service__needs" data-service-needs>
