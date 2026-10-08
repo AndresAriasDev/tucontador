@@ -166,3 +166,4 @@ add_filter( 'document_title_parts', 'contador_theme_tax_service_document_title' 
 require_once get_template_directory() . '/inc/calculators.php';
 require_once get_template_directory() . '/inc/advisory-form.php';
 require_once get_template_directory() . '/inc/advisory-endpoint.php';
+require_once get_template_directory() . '/inc/about-page.php';

@@ -1,0 +1,54 @@
+/* Página institucional: estilos aislados y recursos globales reutilizados. */
+.about-page { overflow-wrap: break-word; }
+.about-page h1, .about-page h2, .about-page h3 { color: var(--color-secondary); }
+.about-page h2 { font-size: clamp(1.8rem, 3.2vw, 2.65rem); text-wrap: balance; }
+.about-page h3 { font-size: var(--font-size-h4); }
+.about-page p { color: var(--color-text-muted); }
+.about-page .about-eyebrow { margin-bottom: 1rem; color: var(--color-primary); font-size: var(--font-size-small); font-weight: var(--font-weight-bold); }
+.about-section { padding-block: var(--section-spacing); }
+.about-section-intro { max-width: 760px; margin-bottom: 3rem; }
+.about-section-intro > p:last-child { margin-bottom: 0; }
+.about-hero { padding-block: 10rem var(--section-spacing); background: var(--color-background-soft); }
+.about-hero__grid, .about-editorial { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 4.5rem); }
+.about-hero h1 { font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1.13; text-wrap: balance; }
+.about-hero .about-lead { color: var(--color-text); }
+.about-hero .about-hero__experience { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; color: var(--color-secondary); font-size: var(--font-size-small); }
+.about-hero__experience-badge { flex-shrink: 0; padding: .25rem .75rem; border-radius: 999px; background: var(--color-primary); color: var(--color-text-light); font-weight: var(--font-weight-semibold); }
+.about-hero .btn { margin-top: .75rem; }
+.about-hero__photo { position: relative; min-width: 0; margin: 0; }
+.about-hero__photo::before { content: ''; position: absolute; top: -1rem; right: 1rem; width: 5rem; height: 5rem; background: var(--color-accent); border-radius: 50%; }
+.about-hero__photo > img { position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 1.25rem; }
+.about-editorial { align-items: start; }
+.about-page .about-editorial__statement { margin: 2rem 0 0; padding: 1rem 0 1rem 1.5rem; border-left: 3px solid var(--color-accent); color: var(--color-secondary); font-weight: var(--font-weight-medium); }
+.about-editorial__copy { padding-top: 2.25rem; }
+.about-process { background: var(--color-background-soft); }
+.about-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem; list-style: none; padding: 0; margin: 0; }
+.about-steps li { position: relative; border-top: 1px solid var(--color-border); padding-top: 1.5rem; }
+.about-steps li::before { content: ''; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--color-primary); }
+.about-steps__number { display: block; margin-bottom: 1rem; color: var(--color-primary); font-size: 3rem; line-height: 1; font-weight: var(--font-weight-bold); }
+.about-steps p { margin-bottom: 0; }
+.about-conversion { padding-block-start: 0; background: var(--color-background-soft); text-align: center; }
+.about-conversion__content { max-width: 48rem; margin-inline: auto; }
+.about-conversion h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); line-height: 1.1; }
+.about-conversion p { max-width: 62ch; margin: 1.25rem auto 2rem; }
+@media (max-width: 1000px) {
+	.about-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+	.about-hero { padding-top: 8.5rem; }
+	.about-hero__grid, .about-editorial { grid-template-columns: minmax(0, 1fr); }
+	.about-hero__photo { max-width: 540px; width: 100%; justify-self: center; }
+	.about-hero__photo > img { aspect-ratio: 5 / 4; }
+	.about-editorial__copy { padding-top: 0; }
+}
+@media (max-width: 540px) {
+	.about-steps { grid-template-columns: minmax(0, 1fr); }
+	.about-steps { gap: 0; }
+	.about-steps li { border-top: 0; border-left: 1px solid var(--color-border); padding: 0 0 2rem 1.5rem; margin-left: 4px; }
+	.about-steps li:last-child { padding-bottom: 0; }
+	.about-steps li::before { top: 0; left: -5px; }
+	.about-hero .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.about-page *, .about-page *::before, .about-page *::after { transition: none; animation: none; }
+}
