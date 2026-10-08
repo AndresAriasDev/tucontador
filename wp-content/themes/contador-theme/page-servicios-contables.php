@@ -40,7 +40,7 @@ get_header();
 				<h1>Servicios contables en Nicaragua</h1>
 				<p class="accounting-service__lead">Mantén tu contabilidad en orden y enfócate en hacer crecer tu negocio con el respaldo de un contador con experiencia.</p>
 				<div class="accounting-service__actions">
-					<a class="btn btn-primary" href="<?php echo esc_url( $contact_url ?: 'mailto:eduardoleonprofesional@hotmail.com' ); ?>">Solicitar asesoría</a>
+					<a class="btn btn-primary" href="#solicitar-asesoria">Solicitar asesoría</a>
 					<a class="btn btn-outline" href="#que-incluye">Ver qué incluye</a>
 				</div>
 			</div>
@@ -91,7 +91,7 @@ get_header();
 						<h3><button class="accounting-service__included-trigger" id="included-trigger-<?php echo esc_attr( $index ); ?>" type="button" aria-expanded="true" aria-controls="included-panel-<?php echo esc_attr( $index ); ?>" disabled><?php echo esc_html( $item[0] ); ?></button></h3>
 						<div class="accounting-service__included-panel" id="included-panel-<?php echo esc_attr( $index ); ?>" role="region" aria-labelledby="included-trigger-<?php echo esc_attr( $index ); ?>">
 							<p><?php echo esc_html( $item[1] ); ?></p>
-							<a class="btn btn-primary" href="<?php echo esc_url( $contact_url ?: 'mailto:eduardoleonprofesional@hotmail.com' ); ?>">Solicitar asesoría</a>
+							<a class="btn btn-primary" href="#solicitar-asesoria">Solicitar asesoría</a>
 						</div>
 					</article>
 				<?php endforeach; ?>
@@ -100,6 +100,10 @@ get_header();
 	</section>
 
 	<?php
+	get_template_part( 'template-parts/components/advisory-form', null, array(
+		'id' => 'solicitar-asesoria',
+		'service' => 'Servicios contables',
+	) );
 	get_template_part( 'template-parts/components/faq', null, array(
 		'title' => 'Preguntas frecuentes sobre servicios contables',
 		'items' => $faqs,

@@ -153,3 +153,5 @@ function contador_theme_enqueue_faq_assets() {
 add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_faq_assets', 20 );
 
 require_once get_template_directory() . '/inc/calculators.php';
+require_once get_template_directory() . '/inc/advisory-form.php';
+require_once get_template_directory() . '/inc/advisory-endpoint.php';

@@ -8,7 +8,7 @@ export default defineConfig({
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {
-      input: 'src/calculators/main.tsx',
+      input: ['src/calculators/main.tsx', 'src/advisory/main.tsx'],
     },
   },
 })
