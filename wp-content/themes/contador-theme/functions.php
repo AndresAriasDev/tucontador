@@ -117,9 +117,9 @@ add_filter( 'nav_menu_link_attributes', 'contador_theme_header_cta_attributes', 
 
 
 
-/** Recursos exclusivos de la página individual de Servicios contables. */
+/** Recursos compartidos por las páginas individuales de servicios. */
 function contador_theme_enqueue_accounting_service_styles() {
-	if ( ! is_page( 'servicios-contables' ) ) {
+	if ( ! is_page( array( 'servicios-contables', 'declaraciones-de-impuestos' ) ) ) {
 		return;
 	}
 	$css_file = 'assets/css/pages/servicios-contables.css';
@@ -142,7 +142,7 @@ add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_accounting_service_sty
 
 /** Recursos FAQ compartidos por las páginas que utilizan el componente. */
 function contador_theme_enqueue_faq_assets() {
-	if ( ! is_front_page() && ! is_page( 'servicios-contables' ) ) {
+	if ( ! is_front_page() && ! is_page( array( 'servicios-contables', 'declaraciones-de-impuestos' ) ) ) {
 		return;
 	}
 	$css_file = 'assets/css/components/faq.css';
@@ -151,6 +151,15 @@ function contador_theme_enqueue_faq_assets() {
 	wp_enqueue_script( 'contador-theme-faq', get_theme_file_uri( $js_file ), array(), (string) filemtime( get_theme_file_path( $js_file ) ), true );
 }
 add_action( 'wp_enqueue_scripts', 'contador_theme_enqueue_faq_assets', 20 );
+
+/** Título SEO de la nueva página mediante el soporte title-tag de WordPress. */
+function contador_theme_tax_service_document_title( $parts ) {
+	if ( is_page( 'declaraciones-de-impuestos' ) ) {
+		$parts['title'] = 'Declaraciones de impuestos en Nicaragua';
+	}
+	return $parts;
+}
+add_filter( 'document_title_parts', 'contador_theme_tax_service_document_title' );
 
 require_once get_template_directory() . '/inc/calculators.php';
 require_once get_template_directory() . '/inc/advisory-form.php';
