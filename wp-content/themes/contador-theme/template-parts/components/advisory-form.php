@@ -16,7 +16,7 @@ $instance_id = wp_unique_id( 'advisory-form-' );
       </div>
       <div class="advisory-section__content">
       <header class="advisory-section__intro">
-        <h2 id="<?php echo esc_attr( $instance_id . '-title' ); ?>"><?php if ( isset( $args['title'] ) ) : echo esc_html( $args['title'] ); else : ?>Cuéntame qué<br>necesitas<?php endif; ?></h2>
+        <h2 id="<?php echo esc_attr( $instance_id . '-title' ); ?>"><?php if ( isset( $args['title'] ) ) : echo esc_html( $args['title'] ); else : ?>Contacto<?php endif; ?></h2>
       </header>
       <div id="<?php echo esc_attr( $instance_id ); ?>" data-advisory-form data-service="<?php echo esc_attr( $args['service'] ?? '' ); ?>" data-endpoint="<?php echo esc_url( rest_url( 'tucontador/v1/solicitudes' ) ); ?>">
         <p>El formulario no está disponible en este momento. No se están recibiendo solicitudes desde esta sección.</p>

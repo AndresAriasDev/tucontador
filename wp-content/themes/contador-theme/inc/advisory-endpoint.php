@@ -98,17 +98,26 @@ function contador_receive_advisory_request( WP_REST_Request $request ) {
 		if ( ! is_string( $recipient ) || ! is_email( $recipient ) ) {
 			return contador_advisory_response( array( 'message' => 'El servicio no está disponible. Inténtalo más tarde.' ), 503 );
 		}
-		$labels = array( 'name' => 'Nombre completo', 'phone' => 'Número de celular', 'email' => 'Correo electrónico', 'situation' => 'Situación actual', 'service' => 'Servicio solicitado', 'details' => 'Detalles de la solicitud' );
-		$message = '<html><body><h2>Nueva solicitud de asesoría</h2><table cellpadding="8" cellspacing="0" style="border-collapse:collapse;text-align:left">';
-		foreach ( $labels as $field => $label ) {
-			$message .= '<tr><th scope="row" style="vertical-align:top">' . esc_html( $label ) . '</th><td>' . esc_html( $clean[$field] ) . '</td></tr>';
+		$reply_to = sanitize_email( $clean['email'] );
+		$headers = array( 'Content-Type: text/html; charset=UTF-8' );
+		if ( is_email( $reply_to ) && ! preg_match( '/[\x00-\x1F\x7F]/', $reply_to ) ) {
+			$headers[] = 'Reply-To: ' . $reply_to;
+		} else {
+			$reply_to = '';
 		}
-		$message .= '</table></body></html>';
+		// Solo presentación: restaurar saltos de línea del texto que ya pasó la validación.
+		$email_data = $clean;
+		$email_data['details'] = trim( sanitize_textarea_field( $data['details'] ) );
+		// Generar una sola referencia aleatoria, compartida por el asunto y el HTML.
+		$email_data['request_id'] = strtoupper( bin2hex( random_bytes( 6 ) ) );
+		$subject = 'Nueva solicitud #' . $email_data['request_id'] . ' | ' . $clean['service'];
+		require_once __DIR__ . '/advisory-email.php';
+		$message = contador_render_advisory_email( $email_data, $reply_to );
 		$accepted = wp_mail(
 			$recipient,
-			'Nueva solicitud de asesoría | Tu Contador de Confianza',
+			$subject,
 			$message,
-			array( 'Content-Type: text/html; charset=UTF-8', 'Reply-To: ' . sanitize_email( $clean['email'] ) )
+			$headers
 		);
 		if ( ! $accepted ) {
 			return contador_advisory_response( array( 'message' => 'No pudimos procesar el envío. Conserva tus datos e inténtalo de nuevo.' ), 502 );

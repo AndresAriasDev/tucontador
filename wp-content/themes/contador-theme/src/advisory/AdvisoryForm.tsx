@@ -112,7 +112,7 @@ export function AdvisoryForm({ instanceId, initialService, submitRequest }: Prop
         <textarea {...attrs('details')} rows={5} maxLength={limits.details} placeholder="Cuéntame brevemente qué necesitas resolver..." value={values.details} onChange={event => update('details', event.target.value)} />{error('details')}
       </div>
     </div>
-    <div className="advisory-form__actions"><button ref={submitButtonRef} className="btn btn-primary" type="submit" disabled={!submitRequest || isSubmitting} aria-busy={isSubmitting} aria-describedby={!submitRequest ? instanceId + '-notice' : undefined}>{isSubmitting && <span className="advisory-form__spinner" aria-hidden="true" />}{isSubmitting ? 'Enviando solicitud...' : 'Enviar solicitud'}</button></div>
+    <div className="advisory-form__actions"><button ref={submitButtonRef} className="btn btn-primary" type="submit" disabled={!submitRequest || isSubmitting} aria-busy={isSubmitting} aria-label={isSubmitting ? 'Enviando solicitud...' : undefined} aria-describedby={!submitRequest ? instanceId + '-notice' : undefined}>{isSubmitting ? <span className="advisory-form__spinner" aria-hidden="true" /> : 'Enviar solicitud'}</button></div>
     <p className="advisory-form__status" role="status" aria-live="polite">{status}</p>
     <span className="advisory-form__notice" role="status">{isSubmitting ? 'Enviando solicitud...' : ''}</span>
   </form>
