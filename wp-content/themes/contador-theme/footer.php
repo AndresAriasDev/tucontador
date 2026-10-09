@@ -65,10 +65,7 @@ $footer_legal = array(
 		<div class="site-footer__subscription">
 			<h2 id="footer-subscribe-title">Suscríbete a mi blog</h2>
 			
-			<div class="site-footer__email-field" role="group" aria-labelledby="footer-subscribe-title">
-				<input type="email" name="subscriber_email" placeholder="Tu correo electrónico" aria-label="Tu correo electrónico" autocomplete="email" disabled>
-				<button type="button" aria-label="Suscribirse (próximamente)" disabled><span class="site-footer__icon site-footer__icon--send" aria-hidden="true"></span></button>
-			</div>
+			<?php get_template_part( 'template-parts/subscriptions/form' ); ?>
 			
 			
 		</div>

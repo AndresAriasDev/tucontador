@@ -168,3 +168,4 @@ require_once get_template_directory() . '/inc/advisory-form.php';
 require_once get_template_directory() . '/inc/advisory-endpoint.php';
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/blog.php';
+require_once get_template_directory() . '/inc/subscriptions/bootstrap.php';
