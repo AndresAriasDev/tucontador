@@ -169,3 +169,11 @@ require_once get_template_directory() . '/inc/advisory-endpoint.php';
 require_once get_template_directory() . '/inc/about-page.php';
 require_once get_template_directory() . '/inc/blog.php';
 require_once get_template_directory() . '/inc/subscriptions/bootstrap.php';
+
+/** Recursos exclusivos del índice de Servicios. */
+function contador_services_index_assets() {
+	if ( ! is_page( 'servicios' ) ) return;
+	$file = 'assets/css/pages/servicios.css';
+	wp_enqueue_style( 'contador-services-index', get_theme_file_uri( $file ), array( 'contador-theme-global', 'contador-theme-header' ), (string) filemtime( get_theme_file_path( $file ) ) );
+}
+add_action( 'wp_enqueue_scripts', 'contador_services_index_assets', 20 );
